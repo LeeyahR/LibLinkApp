@@ -46,7 +46,45 @@ class MainActivity : AppCompatActivity() {
 
         //Forgot password
         forgotPassword.setOnClickListener {
-            Toast.makeText(this, "Password reset function will be available soon.", Toast.LENGTH_LONG).show()
+
+            val enteredEmail =
+                emailEditText.text.toString().trim()
+
+            val preferences =
+                getSharedPreferences(
+                    "LibLinkData",
+                    MODE_PRIVATE
+                )
+
+            val registeredEmail =
+                preferences.getString(
+                    "registeredEmail",
+                    null
+                )
+
+            if (enteredEmail.isEmpty()) {
+
+                emailEditText.error =
+                    "Enter your registered email first"
+
+                emailEditText.requestFocus()
+
+            } else if (enteredEmail != registeredEmail) {
+
+                Toast.makeText(
+                    this,
+                    "No account was found with this email",
+                    Toast.LENGTH_LONG
+                ).show()
+
+            } else {
+
+                Toast.makeText(
+                    this,
+                    "Account verified. Password reset will be handled by the API/email service.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
 
         //Register
@@ -62,53 +100,97 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun loginUser(){
-        val email = emailEditText.text.toString().trim()
-        val password = passwordEditText.text.toString().trim()
+    private fun loginUser() {
 
-        //check email
-        if (email.isEmpty()){
-            emailEditText.error = "Please enter your student email"
+        val email =
+            emailEditText.text.toString().trim()
+
+        val password =
+            passwordEditText.text.toString()
+
+        if (email.isEmpty()) {
+
+            emailEditText.error =
+                "Please enter your student email"
+
             emailEditText.requestFocus()
+
             return
         }
 
-        //Check valid email format
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailEditText.error = "Please enter a valid email address"
+        if (!android.util.Patterns.EMAIL_ADDRESS
+                .matcher(email)
+                .matches()
+        ) {
+
+            emailEditText.error =
+                "Please enter a valid email address"
+
             emailEditText.requestFocus()
+
             return
         }
 
-        //check password
-        if (password.isEmpty()){
-            passwordEditText.error = "Please enter your password"
+        if (password.isEmpty()) {
+
+            passwordEditText.error =
+                "Please enter your password"
+
             passwordEditText.requestFocus()
+
             return
         }
 
-        if (password.length < 6 ){
-            passwordEditText.error = "Password must be at least 6 characters"
-            passwordEditText.requestFocus()
+        val preferences =
+            getSharedPreferences(
+                "LibLinkData",
+                MODE_PRIVATE
+            )
+
+        val registeredEmail =
+            preferences.getString(
+                "registeredEmail",
+                null
+            )
+
+        val registeredPassword =
+            preferences.getString(
+                "registeredPassword",
+                null
+            )
+
+        if (
+            email != registeredEmail ||
+            password != registeredPassword
+        ) {
+
+            Toast.makeText(
+                this,
+                "Incorrect email or password",
+                Toast.LENGTH_LONG
+            ).show()
+
             return
         }
-
-        //Temporary local login.
-        //This is where the REST API authentication will be connected for the functional version of libLink
-
-        Toast.makeText(this, "Login Successful", Toast.LENGTH_LONG).show()
-
-        val preferences = getSharedPreferences("LibLinkData", MODE_PRIVATE)
 
         preferences.edit()
-            .putString("loggedInEmail", email)
+            .putString(
+                "loggedInEmail",
+                email
+            )
             .apply()
 
-        //Open the main LibLink screen
-        val intent = Intent(this, HomeActivity::class.java)
+        Toast.makeText(
+            this,
+            "Login Successful",
+            Toast.LENGTH_SHORT
+        ).show()
+
+        val intent =
+            Intent(this, HomeActivity::class.java)
+
         startActivity(intent)
 
-        //prevent user from returning to the login screen
         finish()
     }
 }
