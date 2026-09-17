@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -67,8 +66,9 @@
                 android:background="@drawable/rounded_white"
                 android:padding="15dp">
 
+                <!-- Book cover -->
+
                 <TextView
-                    android:id="@+id/borrowedBookTitle"
                     android:layout_width="80dp"
                     android:layout_height="110dp"
                     android:background="#24436A"
@@ -87,7 +87,10 @@
                     android:paddingStart="15dp"
                     tools:ignore="RtlSymmetry">
 
+                    <!-- Actual book title -->
+
                     <TextView
+                        android:id="@+id/borrowedBookTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Database Systems"
