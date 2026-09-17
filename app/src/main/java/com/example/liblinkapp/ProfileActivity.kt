@@ -30,8 +30,14 @@ class ProfileActivity : AppCompatActivity() {
 
         editName = findViewById(R.id.editName)
         editEmail = findViewById(R.id.editEmail)
+
         btnSaveProfile = findViewById(R.id.btnSaveProfile)
         btnLogout = findViewById(R.id.btnLogout)
+
+        navHome = findViewById(R.id.navHome)
+        navBrowse = findViewById(R.id.navBrowse)
+        navProfile = findViewById(R.id.navProfile)
+        navMyBooks = findViewById(R.id.navMyBooks)
 
         btnSaveProfile.setOnClickListener {
             Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_LONG).show()
