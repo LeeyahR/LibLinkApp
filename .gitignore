@@ -1,0 +1,31 @@
+# Visual Studio
+.vs/
+**/.vs/
+
+# .NET
+**/bin/
+**/obj/
+
+# Visual Studio user files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.vsidx
+
+# Android Studio
+.idea/
+**/.idea/
+.gradle/
+**/.gradle/
+
+# Android build files
+**/build/
+**/app/build/
+
+# Local Android configuration
+local.properties
+
+# OS files
+.DS_Store
+Thumbs.db
