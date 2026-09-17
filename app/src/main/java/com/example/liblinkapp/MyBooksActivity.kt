@@ -14,10 +14,10 @@ import androidx.core.view.WindowInsetsCompat
 
 class MyBooksActivity : AppCompatActivity() {
 
-    private lateinit var borrowedBook : TextView
+    private lateinit var borrowedBook : LinearLayout
     private lateinit var borrowedBookTitle : TextView
     private lateinit var dueDate : TextView
-    private lateinit var reservedBook : TextView
+    private lateinit var reservedBook : LinearLayout
     private lateinit var reservedBookTitle : TextView
 
     private lateinit var btnReturn : Button
@@ -50,33 +50,38 @@ class MyBooksActivity : AppCompatActivity() {
         //get saved reserved book
         val savedReservedBook = preferences.getString("reservedBook", null)
 
+        //display borrowed book
+
         if (savedBorrowedBook != null ){
             borrowedBookTitle.text = savedBorrowedBook
             dueDate.text = "Due in 14 days"
 
+            borrowedBook.visibility = View.VISIBLE
             btnReturn.visibility = View.VISIBLE
+
         }else{
 
-            borrowedBook.text = "No Borrowed books"
-            dueDate.text = ""
-            btnReturn.visibility = View.VISIBLE
+            borrowedBook.visibility = View.GONE
+            btnReturn.visibility = View.GONE
 
         }
 
+        //display reserved book
         if (savedReservedBook != null){
             reservedBookTitle.text = savedReservedBook
+            reservedBook.visibility = View.VISIBLE
         }else{
-            reservedBook.text = "No reserved books"
+            reservedBook.visibility = View.GONE
         }
 
+        //return borrowed book
         btnReturn.setOnClickListener {
 
             preferences.edit()
                 .remove("borrowedBook")
                 .apply()
 
-            borrowedBook.text = "No borrowed books"
-            dueDate.text = ""
+            borrowedBook.visibility = View.GONE
             btnReturn.visibility = View.GONE
 
             Toast.makeText(this, "Book returned successfully", Toast.LENGTH_LONG).show()

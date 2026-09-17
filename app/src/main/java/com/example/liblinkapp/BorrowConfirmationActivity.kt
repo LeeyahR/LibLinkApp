@@ -26,6 +26,7 @@ class BorrowConfirmationActivity : AppCompatActivity() {
         val message = findViewById<TextView>(R.id.confirmationMessage)
 
         btnHome = findViewById(R.id.btnHome)
+        btnMyBooks = findViewById(R.id.btnMyBooks)
 
 
         if (action == "reserve"){
