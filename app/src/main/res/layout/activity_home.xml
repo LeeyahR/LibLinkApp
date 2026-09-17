@@ -302,7 +302,7 @@
                                 android:padding="5dp">
 
                                 <TextView
-                                    android:id="@+id/txtBook1"
+                                    android:id="@+id/popularDatabase"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Database\nSystems"
@@ -367,7 +367,7 @@
                                     android:background="#D6A928"/>
 
                                 <TextView
-                                    android:id="@+id/txtBook2"
+                                    android:id="@+id/popularEngineering"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="12dp"
@@ -417,7 +417,7 @@
                                     android:background="#D6A928"/>
 
                                 <TextView
-                                    android:id="@+id/txtBook3"
+                                    android:id="@+id/popularLaw"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="14dp"
@@ -464,7 +464,7 @@
                             app:cardBackgroundColor="#174C35">
 
                             <TextView
-                                android:id="@+id/txtBook4"
+                                android:id="@+id/popularPsych"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
@@ -499,7 +499,7 @@
                             app:cardBackgroundColor="#193352">
 
                             <TextView
-                                android:id="@+id/txtBook5"
+                                android:id="@+id/popularAlgorithm"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center"

@@ -65,6 +65,31 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
+        //popular books
+        findViewById<android.view.View>(R.id.popularDatabase).setOnClickListener{
+            openBook(
+                "Database Systems",
+                "Korth",
+                "Computer Science"
+            )
+        }
+
+        findViewById<android.view.View>(R.id.popularEngineering).setOnClickListener {
+            openBook(
+                "Engineering Mathematics",
+                "K.A Stroud",
+                "Mathematics"
+            )
+        }
+
+        findViewById<android.view.View>(R.id.popularLaw).setOnClickListener {
+            openBook(
+                "Business Law",
+                "Linda Edwards",
+                "Law"
+            )
+        }
+
         //open categories
         categoryMathematics.setOnClickListener {
             openCategory("Mathematics")
@@ -138,6 +163,16 @@ class HomeActivity : AppCompatActivity() {
     private fun openCategory(category: String){
         val intent = Intent(this, BrowseActivity::class.java)
 
+        intent.putExtra("category", category)
+
+        startActivity(intent)
+    }
+
+    private fun openBook(title: String, author: String, category: String){
+        val intent = Intent(this, BrowseActivity::class.java)
+
+        intent.putExtra("bookTitle", title)
+        intent.putExtra("author", author)
         intent.putExtra("category", category)
 
         startActivity(intent)

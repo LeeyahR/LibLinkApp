@@ -169,6 +169,8 @@ class BrowseActivity : AppCompatActivity() {
         intent.putExtra("bookTitle", title)
         intent.putExtra("author", author)
         intent.putExtra("category", category)
+
+        startActivity(intent)
     }
 
 }
