@@ -15,6 +15,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var navBrowse : TextView
     private lateinit var navMyBooks : TextView
     private lateinit var navProfile : TextView
+    private lateinit var txtViewAll : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +26,11 @@ class HomeActivity : AppCompatActivity() {
         navBrowse = findViewById(R.id.navBrowse)
         navMyBooks = findViewById(R.id.navMyBooks)
         navProfile = findViewById(R.id.navProfile)
+        txtViewAll = findViewById(R.id.txtViewAll)
+
+        txtViewAll.setOnClickListener {
+            startActivity(Intent(this, BrowseActivity::class.java))
+        }
 
         navHome.setOnClickListener {
             //Already on Home
