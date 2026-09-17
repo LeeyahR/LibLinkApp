@@ -23,6 +23,10 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var txtViewAll : TextView
     private lateinit var txtSearch : EditText
     private lateinit var txtDate : TextView
+    private lateinit var categoryComputerScience : TextView
+    private lateinit var categoryBusiness : TextView
+    private lateinit var categoryMathematics : TextView
+    private lateinit var categoryLaw : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +40,10 @@ class HomeActivity : AppCompatActivity() {
         txtViewAll = findViewById(R.id.txtViewAll)
         txtSearch = findViewById(R.id.txtSearch)
         txtDate = findViewById(R.id.txtDate)
+        categoryLaw = findViewById(R.id.categoryLaw)
+        categoryBusiness = findViewById(R.id.categoryBusiness)
+        categoryMathematics = findViewById(R.id.categoryMathematics)
+        categoryComputerScience = findViewById(R.id.categoryComputerScience)
 
         //Current Date
         val dateFormat = SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault())
@@ -55,6 +63,23 @@ class HomeActivity : AppCompatActivity() {
             }else{
                 false
             }
+        }
+
+        //open categories
+        categoryMathematics.setOnClickListener {
+            openCategory("Mathematics")
+        }
+
+        categoryComputerScience.setOnClickListener {
+            openCategory("Computer Science")
+        }
+
+        categoryLaw.setOnClickListener {
+            openCategory("Law")
+        }
+
+        categoryBusiness.setOnClickListener {
+            openCategory("Business")
         }
 
         //View all books
@@ -108,6 +133,14 @@ class HomeActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.txtHistoryCount).text = historyCount.toString()
 
+    }
+
+    private fun openCategory(category: String){
+        val intent = Intent(this, BrowseActivity::class.java)
+
+        intent.putExtra("category", category)
+
+        startActivity(intent)
     }
 
 }

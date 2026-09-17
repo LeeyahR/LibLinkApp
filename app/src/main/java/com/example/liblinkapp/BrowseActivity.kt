@@ -30,6 +30,20 @@ class BrowseActivity : AppCompatActivity() {
         bookEngineering = findViewById(R.id.bookEngineering)
         bookLaw = findViewById(R.id.bookLaw)
 
+        //search passed from home page
+        val homeSearch = intent.getStringExtra("searchQuery")
+
+        //Category passed from Home page
+        val selectedCategory = intent.getStringExtra("category")
+
+        if (!homeSearch.isNullOrEmpty()){
+            searchBooks.setText(homeSearch)
+        }
+
+        if (!selectedCategory.isNullOrEmpty()){
+            searchBooks.setText(selectedCategory)
+        }
+
         //Search functionality
         searchBooks.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(
@@ -45,32 +59,8 @@ class BrowseActivity : AppCompatActivity() {
                 start: Int,
                 count: Int,
                 after: Int
-            ){
-                val search = s.toString().lowercase()
-
-                bookDatabase.visibility =
-                    if ("database systems".contains(search) ||
-                        "computer science".contains(search)) {
-                        View.VISIBLE
-                    }else{
-                        View.GONE
-                    }
-
-                bookEngineering.visibility =
-                    if ("engineering mathematics".contains(search) ||
-                        "mathematics".contains(search)){
-                        View.VISIBLE
-                    }else{
-                        View.GONE
-                    }
-                bookLaw.visibility =
-                    if ("business law".contains(search) ||
-                        "law".contains(search)){
-                        View.VISIBLE
-                    }else{
-                        View.GONE
-                    }
-
+            ) {
+                filterBooks(s.toString())
             }
 
             override fun afterTextChanged(s: Editable?){
@@ -78,36 +68,36 @@ class BrowseActivity : AppCompatActivity() {
             }
         })
 
+        //apply initial search
+        filterBooks(searchBooks.text.toString())
+
         //Book selection
 
         bookDatabase.setOnClickListener {
-            val intent = Intent(this, BookDetailsActivity::class.java)
 
-            intent.putExtra("bookTitle", "Database Systems")
-            intent.putExtra("category", "Computer Science")
-            intent.putExtra("author", "Korth")
-
-            startActivity(intent)
+            openBook(
+                "Database Systems",
+                "Korth",
+                "Computer Science"
+            )
         }
 
         bookEngineering.setOnClickListener {
-            val intent = Intent(this, BookDetailsActivity::class.java)
 
-            intent.putExtra("bookTitle", "Engineering Mathematics")
-            intent.putExtra("category", "Mathematics")
-            intent.putExtra("author", "K.A Stroud")
-
-            startActivity(intent)
+            openBook(
+                "Engineering Mathematics",
+                "K.A Stroud",
+                "Mathematics"
+            )
         }
 
         bookLaw.setOnClickListener {
-            val intent = Intent(this, BookDetailsActivity::class.java)
 
-            intent.putExtra("bookTitle", "Business Law")
-            intent.putExtra("category", "Law")
-            intent.putExtra("author", "Linda Edwards")
-
-            startActivity(intent)
+            openBook(
+                "Business Law",
+                "Linda Edwards",
+                "Law"
+            )
         }
 
         //Bottom navigation
@@ -137,4 +127,48 @@ class BrowseActivity : AppCompatActivity() {
             insets
         }
     }
+
+    private fun filterBooks(query: String){
+
+        val search = query.trim().lowercase()
+
+        bookDatabase.visibility = if (search.isEmpty() ||
+            "database systems".contains(search) ||
+            "computer science".contains(search) ||
+            "korth".contains(search)
+            ){
+            View.VISIBLE
+        }else{
+            View.GONE
+        }
+
+        bookEngineering.visibility = if (search.isEmpty() ||
+            "engineering mathematics".contains(search) ||
+            "mathematics".contains(search) ||
+            "k.a stroud".contains(search)
+        ){
+            View.VISIBLE
+        }else{
+            View.GONE
+        }
+
+        bookLaw.visibility = if (search.isEmpty() ||
+            "business law".contains(search) ||
+            "law".contains(search) ||
+            "linda edwards".contains(search)
+        ){
+            View.VISIBLE
+        }else{
+            View.GONE
+        }
+    }
+
+    private fun openBook(title: String, author: String, category: String){
+        val intent = Intent(this, BookDetailsActivity::class.java)
+
+        intent.putExtra("bookTitle", title)
+        intent.putExtra("author", author)
+        intent.putExtra("category", category)
+    }
+
 }

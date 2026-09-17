@@ -575,7 +575,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/txtCategory1"
+                                android:id="@+id/categoryComputerScience"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Computer\nScience"
@@ -626,6 +626,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/categoryBusiness"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Business"
@@ -685,7 +686,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/txtCategory2"
+                                android:id="@+id/categoryMathematics"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Mathematics"
@@ -736,6 +737,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/categoryLaw"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Law"
