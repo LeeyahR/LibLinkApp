@@ -51,9 +51,18 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         btnLogout.setOnClickListener {
+
+            val preferences = getSharedPreferences("LibLinkData", MODE_PRIVATE)
+
+            preferences.edit()
+                .remove("loggedInEmail")
+                .apply()
+
             val intent = Intent(this, MainActivity::class.java)
 
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+            startActivity(intent)
 
             finish()
         }

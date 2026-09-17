@@ -2,11 +2,16 @@ package com.example.liblinkapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class HomeActivity : AppCompatActivity() {
 
@@ -16,6 +21,8 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var navMyBooks : TextView
     private lateinit var navProfile : TextView
     private lateinit var txtViewAll : TextView
+    private lateinit var txtSearch : EditText
+    private lateinit var txtDate : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,11 +34,35 @@ class HomeActivity : AppCompatActivity() {
         navMyBooks = findViewById(R.id.navMyBooks)
         navProfile = findViewById(R.id.navProfile)
         txtViewAll = findViewById(R.id.txtViewAll)
+        txtSearch = findViewById(R.id.txtSearch)
+        txtDate = findViewById(R.id.txtDate)
 
+        //Current Date
+        val dateFormat = SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault())
+        txtDate.text = dateFormat.format(Date())
+
+        //Home search
+        txtSearch.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH){
+                val search = txtSearch.text.toString().trim()
+
+                val intent = Intent(this, BrowseActivity::class.java)
+                intent.putExtra("searchQuery", search)
+
+                startActivity(intent)
+
+                true
+            }else{
+                false
+            }
+        }
+
+        //View all books
         txtViewAll.setOnClickListener {
             startActivity(Intent(this, BrowseActivity::class.java))
         }
 
+        //Bottom navigation
         navHome.setOnClickListener {
             //Already on Home
         }
@@ -55,4 +86,28 @@ class HomeActivity : AppCompatActivity() {
             insets
         }
     }
+
+    override fun onResume(){
+        super.onResume()
+        updateStatistics()
+    }
+
+    private fun updateStatistics(){
+
+        val preferences = getSharedPreferences("LibLinkData", MODE_PRIVATE)
+
+        val borrowedBook = preferences.getString("borrowedBook", null)
+
+        val reservedBook = preferences.getString("reservedBook", null)
+
+        val historyCount = preferences.getInt("historyCount", 0)
+
+        findViewById<TextView>(R.id.txtBorrowedCount).text = if (borrowedBook != null) "1" else "0"
+
+        findViewById<TextView>(R.id.txtReservedCount).text = if (reservedBook != null) "1" else "0"
+
+        findViewById<TextView>(R.id.txtHistoryCount).text = historyCount.toString()
+
+    }
+
 }

@@ -103,7 +103,9 @@
                         android:paddingEnd="16dp"
                         android:textColor="#333333"
                         android:textColorHint="#888888"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        android:imeOptions="actionSearch"
+                        android:singleLine="true"/>
 
                 </LinearLayout>
 
@@ -136,9 +138,10 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/txtBorrowedCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="2"
+                            android:text="0"
                             android:textColor="#162544"
                             android:textSize="24sp"
                             android:textStyle="bold"
@@ -173,9 +176,10 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/txtReservedCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1"
+                            android:text="0"
                             android:textColor="#D6A928"
                             android:textSize="24sp"
                             android:textStyle="bold"
@@ -209,9 +213,10 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/txtHistoryCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="12"
+                            android:text="0"
                             android:textColor="#687187"
                             android:textSize="24sp"
                             android:textStyle="bold"
