@@ -32,11 +32,28 @@ class BorrowConfirmationActivity : AppCompatActivity() {
             title.text = "Book Reserved"
 
             message.text = "$bookTitle has been added to your reservations."
+            val preferences = getSharedPreferences(
+                "LibLinkData",
+                MODE_PRIVATE
+            )
+
+            preferences.edit()
+                .putString("reservedBook", bookTitle)
+                .apply()
 
         }else{
             title.text = "Book Borrowed"
 
             message.text = "$bookTitle has been added to your borrowed books."
+
+            val preferences = getSharedPreferences(
+                "LibLinkData",
+                MODE_PRIVATE
+            )
+
+            preferences.edit()
+                .putString("borrowedBook", bookTitle)
+                .apply()
         }
 
         btnMyBooks.setOnClickListener{

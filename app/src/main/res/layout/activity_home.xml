@@ -89,15 +89,19 @@
                         android:textSize="30sp"
                         tools:ignore="HardcodedText,TextContrastCheck" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/txtSearch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:hint="Search books, authors, ISBN..."
-                        android:textColor="#8A94AA"
-                        android:textSize="16sp"
-                        tools:ignore="HardcodedText,TextContrastCheck" />
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/rounded_input"
+                        android:hint="Search for a book..."
+                        android:inputType="text"
+                        android:padding="14dp"
+                        android:textColor="#333333"
+                        android:textColorHint="#888888"
+                        android:textSize="15sp"
+                        tools:ignore="Autofill,HardcodedText" />
 
                 </LinearLayout>
 
