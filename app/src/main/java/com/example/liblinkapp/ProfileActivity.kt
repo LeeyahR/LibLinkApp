@@ -31,6 +31,7 @@ class ProfileActivity : AppCompatActivity() {
         editName = findViewById(R.id.editName)
         editEmail = findViewById(R.id.editEmail)
 
+
         btnSaveProfile = findViewById(R.id.btnSaveProfile)
         btnLogout = findViewById(R.id.btnLogout)
 
@@ -38,6 +39,12 @@ class ProfileActivity : AppCompatActivity() {
         navBrowse = findViewById(R.id.navBrowse)
         navProfile = findViewById(R.id.navProfile)
         navMyBooks = findViewById(R.id.navMyBooks)
+
+        val preferences = getSharedPreferences("LibLinkData", MODE_PRIVATE)
+
+        val savedEmail = preferences.getString("loggedInEmail", "No email available")
+
+        editEmail.setText(savedEmail)
 
         btnSaveProfile.setOnClickListener {
             Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_LONG).show()

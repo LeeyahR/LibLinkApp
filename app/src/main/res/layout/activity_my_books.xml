@@ -68,6 +68,7 @@
                 android:padding="15dp">
 
                 <TextView
+                    android:id="@+id/borrowedBookTitle"
                     android:layout_width="80dp"
                     android:layout_height="110dp"
                     android:background="#24436A"
@@ -158,6 +159,7 @@
                     tools:ignore="RtlSymmetry">
 
                     <TextView
+                        android:id="@+id/reservedBookTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Business Law"

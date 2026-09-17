@@ -98,6 +98,12 @@ class MainActivity : AppCompatActivity() {
 
         Toast.makeText(this, "Login Successful", Toast.LENGTH_LONG).show()
 
+        val preferences = getSharedPreferences("LibLinkData", MODE_PRIVATE)
+
+        preferences.edit()
+            .putString("loggedInEmail", email)
+            .apply()
+
         //Open the main LibLink screen
         val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)

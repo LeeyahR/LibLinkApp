@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -14,8 +15,10 @@ import androidx.core.view.WindowInsetsCompat
 class MyBooksActivity : AppCompatActivity() {
 
     private lateinit var borrowedBook : TextView
+    private lateinit var borrowedBookTitle : TextView
     private lateinit var dueDate : TextView
     private lateinit var reservedBook : TextView
+    private lateinit var reservedBookTitle : TextView
 
     private lateinit var btnReturn : Button
     private lateinit var navHome : TextView
@@ -34,8 +37,10 @@ class MyBooksActivity : AppCompatActivity() {
         navProfile = findViewById(R.id.navProfile)
         navBrowse = findViewById(R.id.navBrowse)
         borrowedBook = findViewById(R.id.borrowedBook)
+        borrowedBookTitle = findViewById(R.id.borrowedBookTitle)
         dueDate = findViewById(R.id.dueDate)
         reservedBook = findViewById(R.id.reservedBook)
+        reservedBookTitle = findViewById(R.id.reservedBookTitle)
 
         val preferences = getSharedPreferences("LibLinkData", MODE_PRIVATE)
 
@@ -46,7 +51,7 @@ class MyBooksActivity : AppCompatActivity() {
         val savedReservedBook = preferences.getString("reservedBook", null)
 
         if (savedBorrowedBook != null ){
-            borrowedBook.text = savedBorrowedBook
+            borrowedBookTitle.text = savedBorrowedBook
             dueDate.text = "Due in 14 days"
 
             btnReturn.visibility = View.VISIBLE
@@ -59,7 +64,7 @@ class MyBooksActivity : AppCompatActivity() {
         }
 
         if (savedReservedBook != null){
-            reservedBook.text = savedReservedBook
+            reservedBookTitle.text = savedReservedBook
         }else{
             reservedBook.text = "No reserved books"
         }
