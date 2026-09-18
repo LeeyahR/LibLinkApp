@@ -9,6 +9,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.liblinkapp.api.ApiClient
+import com.example.liblinkapp.api.ApiService
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -28,10 +30,16 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var categoryMathematics : TextView
     private lateinit var categoryLaw : TextView
 
+    //api
+    private lateinit var api : ApiService
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
+
+        //api
+        api = ApiClient.create(this)
 
         navHome = findViewById(R.id.navHome)
         navBrowse = findViewById(R.id.navBrowse)
