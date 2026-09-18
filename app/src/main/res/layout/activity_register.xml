@@ -46,6 +46,14 @@
             tools:ignore="Autofill,HardcodedText,TextContrastCheck,VisualLintTextFieldSize" />
 
         <EditText
+            android:id="@+id/registerStudentNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Student Number"
+            android:inputType="text"
+            tools:ignore="Autofill,HardcodedText,TextContrastCheck,TextFields,TouchTargetSizeCheck" />
+
+        <EditText
             android:id="@+id/registerEmail"
             android:layout_width="match_parent"
             android:layout_height="58dp"

@@ -1,7 +1,8 @@
 package com.example.liblinkapp.models
 
 data class RegisterRequest(
-    val name: String,
+    val fullName: String,
     val email: String,
+    val studentNumber: String,
     val password: String
 )

@@ -10,6 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.liblinkapp.utils.SessionManager
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -40,11 +41,24 @@ class ProfileActivity : AppCompatActivity() {
         navProfile = findViewById(R.id.navProfile)
         navMyBooks = findViewById(R.id.navMyBooks)
 
-        val preferences = getSharedPreferences("LibLinkData", MODE_PRIVATE)
+        val sessionManager =
+            SessionManager(this)
 
-        val savedEmail = preferences.getString("loggedInEmail", "No email available")
+        sessionManager.logout()
 
-        editEmail.setText(savedEmail)
+        val intent =
+            Intent(this, MainActivity::class.java)
+
+        intent.flags =
+            Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+        startActivity(intent)
+
+        finish()
+
+
+
 
         btnSaveProfile.setOnClickListener {
             Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_LONG).show()

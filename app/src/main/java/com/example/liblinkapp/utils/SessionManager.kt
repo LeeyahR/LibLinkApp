@@ -14,13 +14,13 @@ class SessionManager(context: Context) {
         userId: Int,
         name: String,
         email: String,
-        token: String?
+        role: String
     ) {
         preferences.edit()
             .putInt("userId", userId)
             .putString("name", name)
             .putString("email", email)
-            .putString("token", token)
+            .putString("role", role)
             .putBoolean("loggedIn", true)
             .apply()
     }
@@ -37,8 +37,8 @@ class SessionManager(context: Context) {
         return preferences.getString("email", null)
     }
 
-    fun getToken(): String? {
-        return preferences.getString("token", null)
+    fun getRole(): String? {
+        return preferences.getString("role", null)
     }
 
     fun isLoggedIn(): Boolean {

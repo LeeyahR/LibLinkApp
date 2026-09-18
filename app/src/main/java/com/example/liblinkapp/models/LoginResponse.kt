@@ -1,8 +1,21 @@
 package com.example.liblinkapp.models
 
+import com.google.gson.annotations.SerializedName
+
 data class LoginResponse(
-    val success: Boolean,
+
+    @SerializedName("message")
     val message: String?,
-    val token: String?,
-    val user: User?
+
+    @SerializedName("userId")
+    val userId: Int,
+
+    @SerializedName("name")
+    val name: String,
+
+    @SerializedName("email")
+    val email: String,
+
+    @SerializedName("role")
+    val role: String
 )

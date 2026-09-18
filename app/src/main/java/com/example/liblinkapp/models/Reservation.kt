@@ -1,11 +1,21 @@
 package com.example.liblinkapp.models
 
+import com.google.gson.annotations.SerializedName
+
 data class Reservation(
+
+    @SerializedName("reservationID")
     val id: Int,
-    val bookId: Int,
+
+    @SerializedName("userID")
     val userId: Int,
-    val title: String,
-    val author: String,
-    val reservedDate: String?,
-    val status: String
+
+    @SerializedName("bookID")
+    val bookId: Int,
+
+    val reservationDate: String?,
+
+    val status: String,
+
+    val book: Book?
 )

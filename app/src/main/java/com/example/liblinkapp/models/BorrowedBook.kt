@@ -1,13 +1,25 @@
 package com.example.liblinkapp.models
 
+import com.google.gson.annotations.SerializedName
+
 data class BorrowedBook(
+
+    @SerializedName("borrowingID")
     val id: Int,
-    val bookId: Int,
+
+    @SerializedName("userID")
     val userId: Int,
-    val title: String,
-    val author: String,
+
+    @SerializedName("bookID")
+    val bookId: Int,
+
     val borrowedDate: String?,
+
     val dueDate: String?,
+
     val returnedDate: String?,
-    val status: String
+
+    val status: String,
+
+    val book: Book?
 )

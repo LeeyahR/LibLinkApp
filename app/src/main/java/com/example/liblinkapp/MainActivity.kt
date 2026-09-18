@@ -11,6 +11,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.liblinkapp.api.ApiClient
+import com.example.liblinkapp.api.ApiService
+import com.example.liblinkapp.utils.SessionManager
 import kotlin.jvm.java
 
 class MainActivity : AppCompatActivity() {
@@ -22,10 +25,22 @@ class MainActivity : AppCompatActivity() {
     private lateinit var forgotPassword : TextView
     private lateinit var registerText : TextView
 
+    private lateinit var api : ApiService
+    private lateinit var sessionManager : SessionManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+
+        api = ApiClient.create(this)
+        sessionManager = SessionManager(this)
+
+        if (sessionManager.isLoggedIn()){
+            startActivity(Intent(this, HomeActivity::class.java))
+            finish()
+            return
+        }
 
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)

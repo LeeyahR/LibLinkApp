@@ -12,6 +12,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.liblinkapp.api.ApiClient
+import com.example.liblinkapp.api.ApiService
 
 class BrowseActivity : AppCompatActivity() {
 
@@ -19,11 +21,14 @@ class BrowseActivity : AppCompatActivity() {
     private lateinit var bookDatabase : LinearLayout
     private lateinit var bookEngineering : LinearLayout
     private lateinit var bookLaw : LinearLayout
+    private lateinit var api : ApiService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_browse)
+
+        api = ApiClient.create(this)
 
         searchBooks = findViewById(R.id.searchBooks)
         bookDatabase = findViewById(R.id.bookDatabase)
