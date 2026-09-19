@@ -54,3 +54,45 @@ library resources through a mobile Android application.
 ## 6. Authentication
 LibLink uses authenticated API requests and role-based
 authorization.
+
+## 7. REST API
+### Authentication
+- POST /api/auth/register
+- POST /api/auth/login
+
+### Books
+- GET /api/books
+- GET /api/books/{id}
+- GET /api/books/search
+- POST /api/books
+- PUT /api/books/{id}
+- DELETE /api/books/{id}
+
+### Borrowing
+- POST /api/borrowings
+- PUT /api/borrowings/{id}/return
+- GET /api/borrowings/user/{userId}
+
+### Reservations
+- POST /api/reservations
+- GET /api/reservations/user/{userId}
+
+### Reviews
+- GET /api/reviews/book/{bookId}
+- POST /api/reviews
+
+### Reading Lists
+- POST /api/readingLists
+- GET /api/readingLists/user/{userId}
+
+
+
+
+
+
+
+
+
+
+
+
