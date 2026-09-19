@@ -85,7 +85,12 @@ authorization.
 - POST /api/readingLists
 - GET /api/readingLists/user/{userId}
 
+## 8. Validation
+The application validates user input before API requests.
 
+## 9. Logging
+Android Log utilities are used to record important application
+states and API operations.
 
 
 
