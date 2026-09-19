@@ -92,7 +92,24 @@ The application validates user input before API requests.
 Android Log utilities are used to record important application
 states and API operations.
 
+## 10. Unit Testing
+Automated unit tests verify validation and application logic.
 
+## 11. GitHub Actions
+GitHub Actions automatically builds the Android project and
+executes unit tests after repository changes.
+
+## 12. Database
+SQL Server stores users, books, borrowing records,
+reservations, reviews and reading lists.
+
+## 13. Security
+- HTTPS
+- Authentication
+- Password Hashing
+- Authorization
+
+These are used to protect application data.
 
 
 
