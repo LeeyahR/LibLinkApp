@@ -22,3 +22,10 @@ library resources through a mobile Android application.
 - GitHub
 - GitHub Actions
 
+## 4. Architecture
+- Android App
+- Retrofit
+- HTTPS REST API
+- Entity Framework Core
+- SQL Server
+
