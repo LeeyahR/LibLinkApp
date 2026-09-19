@@ -8,6 +8,7 @@ import com.example.liblinkapp.models.RegisterRequest
 import com.example.liblinkapp.models.RegisterResponse
 import com.example.liblinkapp.models.Reservation
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -21,68 +22,63 @@ interface ApiService {
     // AUTH
     // =========================
 
-    @POST("auth/login")
-    fun login(
-        @Body request: LoginRequest
-    ): Call<LoginResponse>
-
-    @POST("auth/register")
-    fun register(
+    @POST("api/auth/register")
+    suspend fun register(
         @Body request: RegisterRequest
-    ): Call<RegisterResponse>
+    ): Response<RegisterResponse>
+
+    @POST("api/auth/login")
+    suspend fun login(
+        @Body request: LoginRequest
+    ): Response<LoginResponse>
 
 
     // =========================
     // BOOKS
     // =========================
 
-    @GET("books")
-    fun getBooks(): Call<List<Book>>
+    @GET("api/books")
+    suspend fun getBooks(): Response<List<Book>>
 
-    @GET("books/{id}")
-    fun getBook(
+    @GET("api/books/{id}")
+    suspend fun getBook(
         @Path("id") id: Int
-    ): Call<Book>
+    ): Response<Book>
 
-    @GET("books/search")
-    fun searchBooks(
+    @GET("api/books/search")
+    suspend fun searchBooks(
         @Query("search") search: String
-    ): Call<List<Book>>
+    ): Response<List<Book>>
 
 
     // =========================
     // BORROWING
     // =========================
 
-    @POST("borrowings")
-    fun borrowBook(
+    @POST("api/borrowings")
+    suspend fun borrowBook(
         @Query("userId") userId: Int,
         @Query("bookId") bookId: Int
-    ): Call<BorrowedBook>
+    ): Response<BorrowedBook>
 
-    @PUT("borrowings/{id}/return")
-    fun returnBook(
-        @Path("id") borrowingId: Int
-    ): Call<BorrowedBook>
+    @PUT("api/borrowings/{id}/return")
+    suspend fun returnBook(
+        @Path("id") id: Int
+    ): Response<BorrowedBook>
 
-    @GET("borrowings/user/{userId}")
-    fun getUserBorrowings(
+    @GET("api/borrowings/user/{userId}")
+    suspend fun getBorrowings(
         @Path("userId") userId: Int
-    ): Call<List<BorrowedBook>>
+    ): Response<List<BorrowedBook>>
 
 
     // =========================
     // RESERVATIONS
     // =========================
 
-    @POST("reservations")
-    fun reserveBook(
+    @POST("api/reservations")
+    suspend fun reserveBook(
         @Query("userId") userId: Int,
         @Query("bookId") bookId: Int
-    ): Call<Reservation>
-
-    @GET("reservations/user/{userId}")
-    fun getUserReservations(
-        @Path("userId") userId: Int
-    ): Call<List<Reservation>>
+    ): Response<Reservation>
 }
