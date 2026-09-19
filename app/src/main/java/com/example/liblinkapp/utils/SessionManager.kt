@@ -46,6 +46,8 @@ class SessionManager(context: Context) {
     }
 
     fun logout() {
-        preferences.edit().clear().apply()
+        preferences.edit()
+            .clear()
+            .apply()
     }
 }

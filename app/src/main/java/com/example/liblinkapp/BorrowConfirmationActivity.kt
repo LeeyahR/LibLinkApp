@@ -4,73 +4,287 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import com.example.liblinkapp.api.ApiClient
+import com.example.liblinkapp.api.ApiService
+import com.example.liblinkapp.utils.SessionManager
+import kotlinx.coroutines.launch
 
 class BorrowConfirmationActivity : AppCompatActivity() {
 
+    private lateinit var btnHome: Button
+    private lateinit var btnMyBooks: Button
 
-    private lateinit var btnHome : Button
-    private lateinit var btnMyBooks : Button
+    private lateinit var api: ApiService
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
-        setContentView(R.layout.activity_borrow_confirmation)
+        setContentView(
+            R.layout.activity_borrow_confirmation
+        )
 
-        val bookTitle = intent.getStringExtra("bookTitle") ?: "Book"
-        val action = intent.getStringExtra("action") ?: "borrow"
-        val title = findViewById<TextView>(R.id.confirmationTitle)
-        val message = findViewById<TextView>(R.id.confirmationMessage)
+        btnHome =
+            findViewById(R.id.btnHome)
 
-        btnHome = findViewById(R.id.btnHome)
-        btnMyBooks = findViewById(R.id.btnMyBooks)
+        btnMyBooks =
+            findViewById(R.id.btnMyBooks)
 
+        api =
+            ApiClient.create(this)
 
-        if (action == "reserve"){
-            title.text = "Book Reserved"
+        sessionManager =
+            SessionManager(this)
 
-            message.text = "$bookTitle has been added to your reservations."
-            val preferences = getSharedPreferences(
-                "LibLinkData",
-                MODE_PRIVATE
+        val bookId =
+            intent.getIntExtra(
+                "bookId",
+                -1
             )
 
-            preferences.edit()
-                .putString("reservedBook", bookTitle)
-                .apply()
+        val bookTitle =
+            intent.getStringExtra(
+                "bookTitle"
+            ) ?: "Book"
 
-        }else{
-            title.text = "Book Borrowed"
+        val action =
+            intent.getStringExtra(
+                "action"
+            ) ?: "borrow"
 
-            message.text = "$bookTitle has been added to your borrowed books."
-
-            val preferences = getSharedPreferences(
-                "LibLinkData",
-                MODE_PRIVATE
+        val title =
+            findViewById<TextView>(
+                R.id.confirmationTitle
             )
 
-            preferences.edit()
-                .putString("borrowedBook", bookTitle)
-                .apply()
+        val message =
+            findViewById<TextView>(
+                R.id.confirmationMessage
+            )
+
+        if (!sessionManager.isLoggedIn()) {
+
+            goToLogin()
+            return
         }
 
-        btnMyBooks.setOnClickListener{
-            startActivity(Intent(this, MyBooksActivity::class.java))
+        if (bookId == -1) {
+
+            Toast.makeText(
+                this,
+                "Invalid book.",
+                Toast.LENGTH_LONG
+            ).show()
+
+            finish()
+            return
+        }
+
+        if (action == "reserve") {
+
+            title.text =
+                "Book Reservation"
+
+            message.text =
+                "Reserving $bookTitle..."
+
+            reserveBook(
+                bookId,
+                bookTitle
+            )
+
+        } else {
+
+            title.text =
+                "Book Borrowing"
+
+            message.text =
+                "Borrowing $bookTitle..."
+
+            borrowBook(
+                bookId,
+                bookTitle
+            )
+        }
+
+        btnMyBooks.setOnClickListener {
+
+            startActivity(
+                Intent(
+                    this,
+                    MyBooksActivity::class.java
+                )
+            )
+
             finish()
         }
 
         btnHome.setOnClickListener {
-            startActivity(Intent(this, HomeActivity::class.java))
+
+            startActivity(
+                Intent(
+                    this,
+                    HomeActivity::class.java
+                )
+            )
+
             finish()
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+        ViewCompat.setOnApplyWindowInsetsListener(
+            findViewById(R.id.main)
+        ) { v, insets ->
+
+            val systemBars =
+                insets.getInsets(
+                    WindowInsetsCompat.Type.systemBars()
+                )
+
+            v.setPadding(
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
+                systemBars.bottom
+            )
+
             insets
         }
+    }
+
+    private fun borrowBook(
+        bookId: Int,
+        bookTitle: String
+    ) {
+
+        val userId =
+            sessionManager.getUserId()
+
+        lifecycleScope.launch {
+
+            try {
+
+                val response =
+                    api.borrowBook(
+                        userId,
+                        bookId
+                    )
+
+                if (response.isSuccessful) {
+
+                    findViewById<TextView>(
+                        R.id.confirmationTitle
+                    ).text =
+                        "Book Borrowed"
+
+                    findViewById<TextView>(
+                        R.id.confirmationMessage
+                    ).text =
+                        "$bookTitle has been added to your borrowed books."
+
+                } else {
+
+                    showError(
+                        "Could not borrow $bookTitle."
+                    )
+                }
+
+            } catch (e: Exception) {
+
+                showError(
+                    "Could not connect to API: ${e.message}"
+                )
+            }
+        }
+    }
+
+    private fun reserveBook(
+        bookId: Int,
+        bookTitle: String
+    ) {
+
+        val userId =
+            sessionManager.getUserId()
+
+        lifecycleScope.launch {
+
+            try {
+
+                val response =
+                    api.reserveBook(
+                        userId,
+                        bookId
+                    )
+
+                if (response.isSuccessful) {
+
+                    findViewById<TextView>(
+                        R.id.confirmationTitle
+                    ).text =
+                        "Book Reserved"
+
+                    findViewById<TextView>(
+                        R.id.confirmationMessage
+                    ).text =
+                        "$bookTitle has been added to your reservations."
+
+                } else {
+
+                    showError(
+                        "Could not reserve $bookTitle."
+                    )
+                }
+
+            } catch (e: Exception) {
+
+                showError(
+                    "Could not connect to API: ${e.message}"
+                )
+            }
+        }
+    }
+
+    private fun showError(
+        message: String
+    ) {
+
+        Toast.makeText(
+            this,
+            message,
+            Toast.LENGTH_LONG
+        ).show()
+
+        findViewById<TextView>(
+            R.id.confirmationTitle
+        ).text =
+            "Request Failed"
+
+        findViewById<TextView>(
+            R.id.confirmationMessage
+        ).text =
+            message
+    }
+
+    private fun goToLogin() {
+
+        val intent =
+            Intent(
+                this,
+                MainActivity::class.java
+            )
+
+        intent.flags =
+            Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+        startActivity(intent)
+
+        finish()
     }
 }

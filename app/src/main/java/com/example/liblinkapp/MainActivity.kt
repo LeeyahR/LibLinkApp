@@ -1,8 +1,8 @@
 package com.example.liblinkapp
 
 import android.content.Intent
-import android.inputmethodservice.ExtractEditText
 import android.os.Bundle
+import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -11,106 +11,135 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.liblinkapp.api.ApiClient
 import com.example.liblinkapp.api.ApiService
+import com.example.liblinkapp.models.LoginRequest
 import com.example.liblinkapp.utils.SessionManager
-import kotlin.jvm.java
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var emailEditText: EditText
-    private lateinit var passwordEditText : EditText
-    private lateinit var btnSignIn : Button
-    private lateinit var btnSSO : Button
-    private lateinit var forgotPassword : TextView
-    private lateinit var registerText : TextView
+    private lateinit var passwordEditText: EditText
+    private lateinit var btnSignIn: Button
+    private lateinit var btnSSO: Button
+    private lateinit var forgotPassword: TextView
+    private lateinit var registerText: TextView
 
-    private lateinit var api : ApiService
-    private lateinit var sessionManager : SessionManager
+    private lateinit var api: ApiService
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
         api = ApiClient.create(this)
         sessionManager = SessionManager(this)
 
-        if (sessionManager.isLoggedIn()){
-            startActivity(Intent(this, HomeActivity::class.java))
+        // Check if user is already logged in
+        if (sessionManager.isLoggedIn()) {
+
+            startActivity(
+                Intent(
+                    this,
+                    HomeActivity::class.java
+                )
+            )
+
             finish()
+
             return
         }
 
-        emailEditText = findViewById(R.id.emailEditText)
-        passwordEditText = findViewById(R.id.passwordEditText)
-        btnSignIn = findViewById(R.id.btnSignIn)
-        btnSSO = findViewById(R.id.btnSSO)
-        forgotPassword = findViewById(R.id.forgotPassword)
-        registerText = findViewById(R.id.registerText)
+        emailEditText =
+            findViewById(R.id.emailEditText)
 
-        //sign in
+        passwordEditText =
+            findViewById(R.id.passwordEditText)
+
+        btnSignIn =
+            findViewById(R.id.btnSignIn)
+
+        btnSSO =
+            findViewById(R.id.btnSSO)
+
+        forgotPassword =
+            findViewById(R.id.forgotPassword)
+
+        registerText =
+            findViewById(R.id.registerText)
+
+        // -----------------------------
+        // SIGN IN
+        // -----------------------------
+
         btnSignIn.setOnClickListener {
             loginUser()
         }
 
-        //SSO Sign in
+        // -----------------------------
+        // SSO
+        // -----------------------------
+
         btnSSO.setOnClickListener {
-            Toast.makeText(this, "University SSO login will be available when the university authentication service is connected.", Toast.LENGTH_LONG).show()
+
+            Toast.makeText(
+                this,
+                "University SSO login will be available when the university authentication service is connected.",
+                Toast.LENGTH_LONG
+            ).show()
         }
 
-        //Forgot password
+        // -----------------------------
+        // FORGOT PASSWORD
+        // -----------------------------
+
         forgotPassword.setOnClickListener {
 
-            val enteredEmail =
-                emailEditText.text.toString().trim()
-
-            val preferences =
-                getSharedPreferences(
-                    "LibLinkData",
-                    MODE_PRIVATE
-                )
-
-            val registeredEmail =
-                preferences.getString(
-                    "registeredEmail",
-                    null
-                )
-
-            if (enteredEmail.isEmpty()) {
-
-                emailEditText.error =
-                    "Enter your registered email first"
-
-                emailEditText.requestFocus()
-
-            } else if (enteredEmail != registeredEmail) {
-
-                Toast.makeText(
-                    this,
-                    "No account was found with this email",
-                    Toast.LENGTH_LONG
-                ).show()
-
-            } else {
-
-                Toast.makeText(
-                    this,
-                    "Account verified. Password reset will be handled by the API/email service.",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+            Toast.makeText(
+                this,
+                "Password reset will be handled by the API/email service.",
+                Toast.LENGTH_LONG
+            ).show()
         }
 
-        //Register
+        // -----------------------------
+        // REGISTER
+        // -----------------------------
+
         registerText.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
+
+            startActivity(
+                Intent(
+                    this,
+                    RegisterActivity::class.java
+                )
+            )
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+        // -----------------------------
+        // WINDOW INSETS
+        // -----------------------------
+
+        ViewCompat.setOnApplyWindowInsetsListener(
+            findViewById(R.id.main)
+        ) { v, insets ->
+
+            val systemBars =
+                insets.getInsets(
+                    WindowInsetsCompat.Type.systemBars()
+                )
+
+            v.setPadding(
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
+                systemBars.bottom
+            )
+
             insets
         }
     }
@@ -123,6 +152,10 @@ class MainActivity : AppCompatActivity() {
         val password =
             passwordEditText.text.toString()
 
+        // -----------------------------
+        // VALIDATION
+        // -----------------------------
+
         if (email.isEmpty()) {
 
             emailEditText.error =
@@ -133,7 +166,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        if (!android.util.Patterns.EMAIL_ADDRESS
+        if (!Patterns.EMAIL_ADDRESS
                 .matcher(email)
                 .matches()
         ) {
@@ -156,56 +189,93 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val preferences =
-            getSharedPreferences(
-                "LibLinkData",
-                MODE_PRIVATE
+        // -----------------------------
+        // DISABLE BUTTON
+        // -----------------------------
+
+        btnSignIn.isEnabled = false
+
+        // -----------------------------
+        // CREATE REQUEST
+        // -----------------------------
+
+        val request =
+            LoginRequest(
+                email = email,
+                password = password
             )
 
-        val registeredEmail =
-            preferences.getString(
-                "registeredEmail",
-                null
-            )
+        // -----------------------------
+        // CALL API
+        // -----------------------------
 
-        val registeredPassword =
-            preferences.getString(
-                "registeredPassword",
-                null
-            )
+        lifecycleScope.launch {
 
-        if (
-            email != registeredEmail ||
-            password != registeredPassword
-        ) {
+            try {
 
-            Toast.makeText(
-                this,
-                "Incorrect email or password",
-                Toast.LENGTH_LONG
-            ).show()
+                val response =
+                    api.login(request)
 
-            return
+                btnSignIn.isEnabled = true
+
+                if (response.isSuccessful) {
+
+                    val loginResponse =
+                        response.body()
+
+                    if (loginResponse != null) {
+
+                        // Save user session
+                        sessionManager.saveSession(
+                            userId = loginResponse.userId,
+                            name = loginResponse.name,
+                            email = loginResponse.email,
+                            role = loginResponse.role
+                        )
+
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Login successful",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        startActivity(
+                            Intent(
+                                this@MainActivity,
+                                HomeActivity::class.java
+                            )
+                        )
+
+                        finish()
+
+                    } else {
+
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Invalid response from API",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
+                } else {
+
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Incorrect email or password",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+            } catch (e: Exception) {
+
+                btnSignIn.isEnabled = true
+
+                Toast.makeText(
+                    this@MainActivity,
+                    "Could not connect to API: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
-
-        preferences.edit()
-            .putString(
-                "loggedInEmail",
-                email
-            )
-            .apply()
-
-        Toast.makeText(
-            this,
-            "Login Successful",
-            Toast.LENGTH_SHORT
-        ).show()
-
-        val intent =
-            Intent(this, HomeActivity::class.java)
-
-        startActivity(intent)
-
-        finish()
     }
 }

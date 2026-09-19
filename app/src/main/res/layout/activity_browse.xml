@@ -52,7 +52,7 @@
         android:textSize="14sp"
         tools:ignore="Autofill,HardcodedText,TextContrastCheck,TextFields,VisualLintTextFieldSize" />
 
-    <!-- book List -->
+    <!-- Book List -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -65,181 +65,7 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Book 1 -->
-            <LinearLayout
-                android:id="@+id/bookDatabase"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/rounded_white"
-                android:gravity="center_vertical"
-                android:padding="12dp">
-
-                <TextView
-                    android:layout_width="75dp"
-                    android:layout_height="95dp"
-                    android:background="#24436A"
-                    android:gravity="center"
-                    android:text="DATABASE\nSYSTEMS"
-                    android:textColor="#FFFFFF"
-                    android:textSize="10sp"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText,SmallSp" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingStart="15dp"
-                    tools:ignore="RtlSymmetry">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Database Systems"
-                        android:textColor="#162544"
-                        android:textSize="17sp"
-                        android:textStyle="bold"
-                        tools:ignore="HardcodedText" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Computer Science"
-                        android:textColor="#D6A928"
-                        android:textSize="12sp"
-                        tools:ignore="HardcodedText,TextContrastCheck" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="Available"
-                        android:textColor="#3C805B"
-                        android:textSize="12sp"
-                        tools:ignore="HardcodedText" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- Book 2 -->
-            <LinearLayout
-                android:id="@+id/bookEngineering"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/rounded_white"
-                android:gravity="center_vertical"
-                android:padding="12dp">
-
-                <TextView
-                    android:layout_width="75dp"
-                    android:layout_height="95dp"
-                    android:background="#174D40"
-                    android:gravity="center"
-                    android:text="ENGINEERING\nMATHEMATICS"
-                    android:textColor="#FFFFFF"
-                    android:textSize="8sp"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText,SmallSp,TextSizeCheck" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingStart="15dp"
-                    tools:ignore="RtlSymmetry">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Engineering Mathematics"
-                        android:textColor="#162544"
-                        android:textSize="17sp"
-                        android:textStyle="bold"
-                        tools:ignore="HardcodedText" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Mathematics"
-                        android:textColor="#D6A928"
-                        android:textSize="12sp"
-                        tools:ignore="HardcodedText,TextContrastCheck" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="Available"
-                        android:textColor="#3C805B"
-                        android:textSize="12sp"
-                        tools:ignore="HardcodedText" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- Book 3 -->
-            <LinearLayout
-                android:id="@+id/bookLaw"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:background="@drawable/rounded_white"
-                android:gravity="center_vertical"
-                android:padding="12dp">
-
-                <TextView
-                    android:layout_width="75dp"
-                    android:layout_height="95dp"
-                    android:background="#641D1D"
-                    android:gravity="center"
-                    android:text="BUSINESS\nLAW"
-                    android:textColor="#FFFFFF"
-                    android:textSize="10sp"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText,SmallSp" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingStart="15dp"
-                    tools:ignore="RtlSymmetry">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Business Law"
-                        android:textColor="#162544"
-                        android:textSize="17sp"
-                        android:textStyle="bold"
-                        tools:ignore="HardcodedText" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Law"
-                        android:textColor="#D6A928"
-                        android:textSize="12sp"
-                        tools:ignore="HardcodedText,TextContrastCheck" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="Reserved"
-                        android:textColor="#D6A928"
-                        android:textSize="12sp"
-                        tools:ignore="HardcodedText,TextContrastCheck" />
-
-                </LinearLayout>
-
-            </LinearLayout>
+            <!-- API books will be displayed here -->
 
         </LinearLayout>
 
@@ -297,7 +123,5 @@
             tools:ignore="HardcodedText" />
 
     </LinearLayout>
-
-
 
 </LinearLayout>

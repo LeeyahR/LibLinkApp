@@ -2,7 +2,6 @@ package com.example.liblinkapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
 import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
@@ -12,19 +11,24 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import com.example.liblinkapp.api.ApiClient
+import com.example.liblinkapp.models.RegisterRequest
+import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
 
-    private lateinit var registerName : EditText
-    private lateinit var registerEmail : EditText
-    private lateinit var registerPassword : EditText
-    private lateinit var registerConfirmPassword : EditText
-    private lateinit var btnRegister : Button
-    private lateinit var txtBackToLogin : TextView
-    private lateinit var registerStudentNumber : EditText
+    private lateinit var registerName: EditText
+    private lateinit var registerEmail: EditText
+    private lateinit var registerPassword: EditText
+    private lateinit var registerConfirmPassword: EditText
+    private lateinit var btnRegister: Button
+    private lateinit var txtBackToLogin: TextView
+    private lateinit var registerStudentNumber: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
         setContentView(R.layout.activity_register)
 
@@ -37,7 +41,12 @@ class RegisterActivity : AppCompatActivity() {
         registerStudentNumber = findViewById(R.id.registerStudentNumber)
 
         txtBackToLogin.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(
+                Intent(
+                    this,
+                    MainActivity::class.java
+                )
+            )
 
             finish()
         }
@@ -46,9 +55,22 @@ class RegisterActivity : AppCompatActivity() {
             registerUser()
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+        ViewCompat.setOnApplyWindowInsetsListener(
+            findViewById(R.id.main)
+        ) { v, insets ->
+
+            val systemBars =
+                insets.getInsets(
+                    WindowInsetsCompat.Type.systemBars()
+                )
+
+            v.setPadding(
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
+                systemBars.bottom
+            )
+
             insets
         }
     }
@@ -70,15 +92,27 @@ class RegisterActivity : AppCompatActivity() {
         val enteredConfirmPassword =
             registerConfirmPassword.text.toString()
 
+        // -----------------------------
+        // VALIDATION
+        // -----------------------------
+
         if (enteredName.isEmpty()) {
-            registerName.error = "Please enter your name"
+
+            registerName.error =
+                "Please enter your name"
+
             registerName.requestFocus()
+
             return
         }
 
         if (enteredEmail.isEmpty()) {
-            registerEmail.error = "Please enter your email"
+
+            registerEmail.error =
+                "Please enter your email"
+
             registerEmail.requestFocus()
+
             return
         }
 
@@ -86,51 +120,80 @@ class RegisterActivity : AppCompatActivity() {
                 .matcher(enteredEmail)
                 .matches()
         ) {
-            registerEmail.error = "Please enter a valid email"
+
+            registerEmail.error =
+                "Please enter a valid email"
+
             registerEmail.requestFocus()
+
             return
         }
 
         if (enteredStudentNumber.isEmpty()) {
+
             registerStudentNumber.error =
                 "Please enter your student number"
+
             registerStudentNumber.requestFocus()
+
             return
         }
 
         if (enteredPassword.length < 6) {
+
             registerPassword.error =
                 "Password must be at least 6 characters"
+
             registerPassword.requestFocus()
+
             return
         }
 
         if (enteredPassword != enteredConfirmPassword) {
+
             registerConfirmPassword.error =
                 "Passwords do not match"
+
             registerConfirmPassword.requestFocus()
+
             return
         }
 
+        // -----------------------------
+        // DISABLE BUTTON
+        // -----------------------------
+
         btnRegister.isEnabled = false
 
-        val api =
-            com.example.liblinkapp.api.ApiClient.create(this)
+        // -----------------------------
+        // CREATE API CLIENT
+        // -----------------------------
 
-        api.register(
-            com.example.liblinkapp.models.RegisterRequest(
+        val api =
+            ApiClient.create(this)
+
+        // -----------------------------
+        // CREATE REGISTER REQUEST
+        // -----------------------------
+
+        val request =
+            RegisterRequest(
                 fullName = enteredName,
                 email = enteredEmail,
                 studentNumber = enteredStudentNumber,
                 password = enteredPassword
             )
-        ).enqueue(object :
-            retrofit2.Callback<com.example.liblinkapp.models.RegisterResponse> {
 
-            override fun onResponse(
-                call: retrofit2.Call<com.example.liblinkapp.models.RegisterResponse>,
-                response: retrofit2.Response<com.example.liblinkapp.models.RegisterResponse>
-            ) {
+        // -----------------------------
+        // CALL API USING COROUTINE
+        // -----------------------------
+
+        lifecycleScope.launch {
+
+            try {
+
+                val response =
+                    api.register(request)
 
                 btnRegister.isEnabled = true
 
@@ -153,28 +216,28 @@ class RegisterActivity : AppCompatActivity() {
 
                 } else {
 
+                    val errorMessage =
+                        response.errorBody()
+                            ?.string()
+                            ?: "Registration failed"
+
                     Toast.makeText(
                         this@RegisterActivity,
-                        "Registration failed",
+                        errorMessage,
                         Toast.LENGTH_LONG
                     ).show()
                 }
-            }
 
-            override fun onFailure(
-                call: retrofit2.Call<com.example.liblinkapp.models.RegisterResponse>,
-                t: Throwable
-            ) {
+            } catch (e: Exception) {
 
                 btnRegister.isEnabled = true
 
                 Toast.makeText(
                     this@RegisterActivity,
-                    "Could not connect to API: ${t.message}",
+                    "Could not connect to API: ${e.message}",
                     Toast.LENGTH_LONG
                 ).show()
             }
-        })
+        }
     }
-
 }

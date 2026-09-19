@@ -13,13 +13,18 @@ data class BorrowedBook(
     @SerializedName("bookID")
     val bookId: Int,
 
+    @SerializedName("borrowedDate")
     val borrowedDate: String?,
 
+    @SerializedName("dueDate")
     val dueDate: String?,
 
+    @SerializedName("returnedDate")
     val returnedDate: String?,
 
+    @SerializedName("status")
     val status: String,
 
+    @SerializedName("book")
     val book: Book?
 )

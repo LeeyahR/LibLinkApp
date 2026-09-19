@@ -8,18 +8,22 @@ import retrofit2.converter.gson.GsonConverterFactory
 object ApiClient {
 
     private const val BASE_URL =
-        "http://10.0.2.2:5223/api/"
+        "http://10.0.2.2:5223/"
 
     fun create(context: Context): ApiService {
 
         val client = OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor(context))
+            .addInterceptor(
+                AuthInterceptor(context)
+            )
             .build()
 
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(
+                GsonConverterFactory.create()
+            )
             .build()
             .create(ApiService::class.java)
     }
