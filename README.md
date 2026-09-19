@@ -50,3 +50,7 @@ library resources through a mobile Android application.
 - Delete books
 - Manage copies
 - Monitor borrowing
+
+## 6. Authentication
+LibLink uses authenticated API requests and role-based
+authorization.
