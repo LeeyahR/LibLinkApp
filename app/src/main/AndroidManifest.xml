@@ -30,6 +30,9 @@
             android:name=".ProfileActivity"
             android:exported="false" />
         <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".BrowseActivity"
             android:exported="false" />
         <activity

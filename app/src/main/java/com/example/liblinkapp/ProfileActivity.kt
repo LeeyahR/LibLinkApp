@@ -18,6 +18,8 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var editEmail: EditText
     private lateinit var btnSaveProfile: Button
     private lateinit var btnLogout: Button
+    private lateinit var btnSettings: Button
+
 
     private lateinit var navHome: TextView
     private lateinit var navBrowse: TextView
@@ -34,6 +36,7 @@ class ProfileActivity : AppCompatActivity() {
         editEmail = findViewById(R.id.editEmail)
 
         btnSaveProfile = findViewById(R.id.btnSaveProfile)
+        btnSettings = findViewById(R.id.btnSettings)
         btnLogout = findViewById(R.id.btnLogout)
 
         navHome = findViewById(R.id.navHome)
@@ -51,6 +54,13 @@ class ProfileActivity : AppCompatActivity() {
                 "Profile updated successfully",
                 Toast.LENGTH_LONG
             ).show()
+        }
+
+        //Open settings
+        btnSettings.setOnClickListener {
+            startActivity(
+                Intent(this, SettingsActivity::class.java)
+            )
         }
 
         // Logout
