@@ -29,3 +29,24 @@ library resources through a mobile Android application.
 - Entity Framework Core
 - SQL Server
 
+## 5. Features
+### Student
+- Registration
+- Login
+- Book catalogue
+- Search
+- Book details
+- Borrowing
+- Returning
+- Reservations
+- Reading lists
+- Reviews
+- Profile
+- Settings
+
+### Administrator
+- Add books
+- Update books
+- Delete books
+- Manage copies
+- Monitor borrowing
