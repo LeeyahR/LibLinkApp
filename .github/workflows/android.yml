@@ -2,23 +2,15 @@ name: LibLink Android CI
 
 on:
   push:
-    branches:
-      - main
-      - master
-
+    branches: [main, master]
   pull_request:
-    branches:
-      - main
-      - master
+    branches: [main, master]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -32,13 +24,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Make Gradle executable
-        working-directory: LibLink.Android
-        run: chmod +x gradlew
+        run: chmod +x ./gradlew
 
       - name: Build Android application
-        working-directory: LibLink.Android
         run: ./gradlew assembleDebug
 
       - name: Run unit tests
-        working-directory: LibLink.Android
         run: ./gradlew test
