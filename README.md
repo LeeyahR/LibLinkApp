@@ -111,6 +111,15 @@ reservations, reviews and reading lists.
 
 These are used to protect application data.
 
+## 14. Installation
+1. Clone repository.
+2. Open Android project in Android Studio.
+3. Open API in Visual Studio.
+4. Configure SQL Server.
+5. Run database migrations.
+6. Start API.
+7. Configure API URL.
+8. Build Android application.
 
 
 
