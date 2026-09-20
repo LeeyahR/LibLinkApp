@@ -5,11 +5,15 @@ public partial class Program
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        var connectionString = builder.Configuration.GetConnectionString("LibLink_APIContext") ?? throw new InvalidOperationException("Connection string 'LibLink_APIContext' not found.");
 
-        builder.Services.AddDbContext<LibLink_APIContext>(options => options.UseSqlServer(connectionString));
+        var connectionString =
+            builder.Configuration.GetConnectionString("LibLink_APIContext")
+            ?? throw new InvalidOperationException(
+                "Connection string 'LibLink_APIContext' not found.");
 
-        // Add services to the container.
+        builder.Services.AddDbContext<LibLink_APIContext>(options =>
+            options.UseSqlServer(connectionString));
+
         builder.Services.AddControllers();
 
         builder.Services.AddEndpointsApiExplorer();
@@ -17,14 +21,9 @@ public partial class Program
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-
-        //app.UseHttpsRedirection();
+        // Enable Swagger in Azure as well as during local development
+        app.UseSwagger();
+        app.UseSwaggerUI();
 
         app.UseAuthorization();
 
