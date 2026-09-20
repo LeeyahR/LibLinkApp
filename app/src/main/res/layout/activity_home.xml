@@ -39,16 +39,37 @@
                     android:textStyle="bold"
                     tools:ignore="HardcodedText,TextSizeCheck" />
 
-                <TextView
-                    android:id="@+id/txtUsername"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Leeyah 👋"
-                    android:textColor="#FFFFFF"
-                    android:textSize="28sp"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:baselineAligned="false">
+
+                    <TextView
+                        android:id="@+id/txtUsername"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Leeyah 👋"
+                        android:textColor="#FFFFFF"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        tools:ignore="HardcodedText" />
+
+                    <ImageButton
+                        android:id="@+id/btnAddBook"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginEnd="4dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="Add book"
+                        android:padding="8dp"
+                        android:src="@android:drawable/ic_input_add"
+                        app:tint="#FFFFFF"
+                        tools:ignore="HardcodedText,TouchTargetSizeCheck" />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/txtDate"
@@ -98,14 +119,15 @@
                         android:layout_marginEnd="20dp"
                         android:background="@drawable/rounded_input"
                         android:hint="Search for a book..."
+                        android:imeOptions="actionSearch"
                         android:inputType="text"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
+                        android:singleLine="true"
                         android:textColor="#333333"
                         android:textColorHint="#888888"
                         android:textSize="14sp"
-                        android:imeOptions="actionSearch"
-                        android:singleLine="true"/>
+                        tools:ignore="Autofill,HardcodedText,TextContrastCheck,TouchTargetSizeCheck,VisualLintTextFieldSize" />
 
                 </LinearLayout>
 
@@ -701,7 +723,7 @@
                                 android:text="1 book"
                                 android:textColor="#687187"
                                 android:textSize="12sp"
-                                tools:ignore="HardcodedText" />
+                                tools:ignore="HardcodedText,TooManyViews" />
 
                         </LinearLayout>
 

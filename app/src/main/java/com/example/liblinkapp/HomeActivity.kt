@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -72,6 +73,14 @@ class HomeActivity : AppCompatActivity() {
                 false
             }
         }
+
+        //add button
+        findViewById<ImageButton>(R.id.btnAddBook)
+            .setOnClickListener {
+                startActivity(
+                    Intent(this, AddBookActivity::class.java)
+                )
+            }
 
         //popular books
         findViewById<android.view.View>(R.id.popularDatabase).setOnClickListener{

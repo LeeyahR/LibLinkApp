@@ -1,5 +1,6 @@
 package com.example.liblinkapp.api
 
+import com.example.liblinkapp.models.AddBookRequest
 import com.example.liblinkapp.models.Book
 import com.example.liblinkapp.models.BorrowedBook
 import com.example.liblinkapp.models.LoginRequest
@@ -49,6 +50,11 @@ interface ApiService {
     suspend fun searchBooks(
         @Query("search") search: String
     ): Response<List<Book>>
+
+    @POST("api/books")
+    suspend fun addBook(
+        @Body book: AddBookRequest
+    ): Response<Book>
 
 
     // =========================
