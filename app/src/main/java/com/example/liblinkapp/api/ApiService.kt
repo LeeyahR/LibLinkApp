@@ -87,4 +87,9 @@ interface ApiService {
         @Query("userId") userId: Int,
         @Query("bookId") bookId: Int
     ): Response<Reservation>
+
+    @GET("api/reservations/user/{userId}")
+    suspend fun getReservations(
+        @Path("userId") userId: Int
+    ): Response<List<Reservation>>
 }

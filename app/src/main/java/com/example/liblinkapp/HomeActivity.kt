@@ -10,8 +10,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.liblinkapp.api.ApiClient
 import com.example.liblinkapp.api.ApiService
+import com.example.liblinkapp.utils.SessionManager
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -31,6 +34,8 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var categoryMathematics : TextView
     private lateinit var categoryLaw : TextView
 
+    private lateinit var sessionManager : SessionManager
+
     //api
     private lateinit var api : ApiService
 
@@ -38,6 +43,8 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
+
+        sessionManager = SessionManager(this)
 
         //api
         api = ApiClient.create(this)
@@ -161,19 +168,58 @@ class HomeActivity : AppCompatActivity() {
 
     private fun updateStatistics(){
 
-        val preferences = getSharedPreferences("LibLinkData", MODE_PRIVATE)
+        val userId = sessionManager.getUserId()
 
-        val borrowedBook = preferences.getString("borrowedBook", null)
+        if (userId == -1) {
+            return
+        }
 
-        val reservedBook = preferences.getString("reservedBook", null)
+        lifecycleScope.launch {
 
-        val historyCount = preferences.getInt("historyCount", 0)
+            try {
 
-        findViewById<TextView>(R.id.txtBorrowedCount).text = if (borrowedBook != null) "1" else "0"
+                val borrowResponse =
+                    api.getBorrowings(userId)
 
-        findViewById<TextView>(R.id.txtReservedCount).text = if (reservedBook != null) "1" else "0"
+                if (borrowResponse.isSuccessful) {
 
-        findViewById<TextView>(R.id.txtHistoryCount).text = historyCount.toString()
+                    val borrowings =
+                        borrowResponse.body() ?: emptyList()
+
+                    val activeBorrowings =
+                        borrowings.filter {
+                            it.returnedDate == null &&
+                                    it.status.lowercase() != "returned"
+                        }
+
+                    val history =
+                        borrowings.count {
+                            it.status.lowercase() == "returned"
+                        }
+
+                    findViewById<TextView>(
+                        R.id.txtBorrowedCount
+                    ).text =
+                        activeBorrowings.size.toString()
+
+                    findViewById<TextView>(
+                        R.id.txtHistoryCount
+                    ).text =
+                        history.toString()
+                }
+
+            } catch (e: Exception) {
+
+                // Keep the screen usable if the API is unavailable.
+                findViewById<TextView>(
+                    R.id.txtBorrowedCount
+                ).text = "0"
+
+                findViewById<TextView>(
+                    R.id.txtHistoryCount
+                ).text = "0"
+            }
+        }
 
     }
 
