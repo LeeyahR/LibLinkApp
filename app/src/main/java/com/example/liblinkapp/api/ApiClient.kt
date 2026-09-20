@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
 
-    private const val BASE_URL = "liblinkapi-dcfgc8d5d6etcrdj.southafricanorth-01.azurewebsites.net/"
+    private const val BASE_URL = "https://liblinkapi-dcfgc8d5d6etcrdj.southafricanorth-01.azurewebsites.net/"
 
     fun create(context: Context): ApiService {
 
