@@ -75,6 +75,17 @@ class BorrowConfirmationActivity : AppCompatActivity() {
             return
         }
 
+        val userId = sessionManager.getUserId()
+
+        if (userId == -1) {
+
+            showError(
+                "No logged-in user was found. Please log out and log in again."
+            )
+
+            return
+        }
+
         if (bookId == -1) {
 
             Toast.makeText(
@@ -89,30 +100,27 @@ class BorrowConfirmationActivity : AppCompatActivity() {
 
         if (action == "reserve") {
 
-            title.text =
-                "Book Reservation"
-
-            message.text =
-                "Reserving $bookTitle..."
+            title.text = "Book Reservation"
+            message.text = "Reserving $bookTitle..."
 
             reserveBook(
+                userId,
                 bookId,
                 bookTitle
             )
 
         } else {
 
-            title.text =
-                "Book Borrowing"
-
-            message.text =
-                "Borrowing $bookTitle..."
+            title.text = "Book Borrowing"
+            message.text = "Borrowing $bookTitle..."
 
             borrowBook(
+                userId,
                 bookId,
                 bookTitle
             )
         }
+
 
         btnMyBooks.setOnClickListener {
 
@@ -159,6 +167,7 @@ class BorrowConfirmationActivity : AppCompatActivity() {
     }
 
     private fun borrowBook(
+        userId: Int,
         bookId: Int,
         bookTitle: String
     ) {
@@ -172,8 +181,8 @@ class BorrowConfirmationActivity : AppCompatActivity() {
 
                 val response =
                     api.borrowBook(
-                        userId,
-                        bookId
+                        userId = userId,
+                        bookId = bookId
                     )
 
                 if (response.isSuccessful) {
@@ -190,8 +199,13 @@ class BorrowConfirmationActivity : AppCompatActivity() {
 
                 } else {
 
+                    val error =
+                        response.errorBody()
+                            ?.string()
+                            ?.trim()
+
                     showError(
-                        "Could not borrow $bookTitle."
+                        "Borrow failed.\n\nHTTP ${response.code()}\n\nAPI response:\n${error ?: "EMPTY RESPONSE BODY"}"
                     )
                 }
 
@@ -205,6 +219,7 @@ class BorrowConfirmationActivity : AppCompatActivity() {
     }
 
     private fun reserveBook(
+        userId: Int,
         bookId: Int,
         bookTitle: String
     ) {
@@ -218,8 +233,8 @@ class BorrowConfirmationActivity : AppCompatActivity() {
 
                 val response =
                     api.reserveBook(
-                        userId,
-                        bookId
+                        userId = userId,
+                        bookId = bookId
                     )
 
                 if (response.isSuccessful) {
@@ -236,8 +251,13 @@ class BorrowConfirmationActivity : AppCompatActivity() {
 
                 } else {
 
+                    val error =
+                        response.errorBody()
+                            ?.string()
+                            ?.trim()
+
                     showError(
-                        "Could not reserve $bookTitle."
+                        "Reservation failed.\n\nHTTP ${response.code()}\n\nAPI response:\n${error ?: "EMPTY RESPONSE BODY"}"
                     )
                 }
 
