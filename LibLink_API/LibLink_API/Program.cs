@@ -6,15 +6,17 @@ public partial class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        var connectionString =
-            builder.Configuration.GetConnectionString("LibLink_APIContext")
-            ?? throw new InvalidOperationException(
-                "Connection string 'LibLink_APIContext' not found.");
+        var connectionString = builder.Configuration.GetConnectionString("LibLink_APIContext")
+            ?? throw new InvalidOperationException("Connection string 'LibLink_APIContext' not found.");
 
         builder.Services.AddDbContext<LibLink_APIContext>(options =>
             options.UseSqlServer(connectionString));
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler =
+                System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        });
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
