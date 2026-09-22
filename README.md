@@ -1,154 +1,82 @@
-# LibLinkApp
+# LibLink
 
 ## 1. Project Overview
 
 LibLink is a mobile Library Management System designed for university students and library administrators.
 
-## 2. Purpose
+The application provides students with a mobile platform to access library services such as browsing books, searching for books, viewing book details, borrowing books, returning books, reserving books, managing reading lists, submitting reviews and managing their profiles.
 
-The application allows students to browse, search, borrow and reserve library books through an Android mobile application.
+Administrators can manage the library catalogue and monitor borrowing activity.
 
-## 3. Technologies
+---
 
-- Android Studio
-- Kotlin
-- XML
-- Retrofit
-- ASP.NET Core Web API
-- C#
-- Entity Framework Core
-- SQL Server
-- JWT
-- GitHub
-- GitHub Actions
+## 2. Purpose and Scope
 
-## 4. Architecture
+The purpose of LibLink is to provide a mobile-based library management solution that makes library resources accessible through an Android application.
 
-LibLink uses the following architecture:
+The application allows students to:
 
-- Android application
-- Retrofit HTTP client
-- HTTPS REST API
-- ASP.NET Core Web API
-- Entity Framework Core
-- SQL Server database
+- Register for an account
+- Log in securely
+- Browse the library catalogue
+- Search for books
+- View book details
+- Borrow books
+- Return borrowed books
+- Reserve unavailable books
+- Manage reading lists
+- Submit reviews and ratings
+- View their profile
+- Manage application settings
 
-The Android application communicates with the backend through REST API endpoints using Retrofit.
-
-## 5. Features
-
-### Student
-
-- Registration
-- Login
-- Book catalogue
-- Book search
-- Book details
-- Borrowing
-- Returning books
-- Reservations
-- Reading lists
-- Reviews and ratings
-- Profile
-- Settings
-
-### Administrator
+Administrators can:
 
 - Add books
 - Update books
 - Delete books
 - Manage book copies
-- Monitor borrowing
+- Monitor borrowing activity
 
-## 6. Authentication
+---
 
-LibLink uses authenticated API requests and role-based authorization to control access to application functionality.
+## 3. Technologies
 
-## 7. REST API
+### Android Application
 
-### Authentication
+- Android Studio
+- Kotlin
+- XML
+- Retrofit
 
-- POST /api/auth/register
-- POST /api/auth/login
+### Backend
 
-### Books
+- ASP.NET Core Web API
+- C#
+- Entity Framework Core
 
-- GET /api/books
-- GET /api/books/{id}
-- GET /api/books/search
-- POST /api/books
-- PUT /api/books/{id}
-- DELETE /api/books/{id}
+### Database
 
-### Borrowing
+- SQL Server
 
-- POST /api/borrowings
-- PUT /api/borrowings/{id}/return
-- GET /api/borrowings/user/{userId}
+### Security
 
-### Reservations
-
-- POST /api/reservations
-- GET /api/reservations/user/{userId}
-
-### Reviews
-
-- GET /api/reviews/book/{bookId}
-- POST /api/reviews
-
-### Reading Lists
-
-- POST /api/readingLists
-- GET /api/readingLists/user/{userId}
-
-## 8. Validation
-
-The application validates user input before sending requests to the API.
-
-## 9. Logging
-
-Android logging utilities are used during development to record important application states and API operations.
-
-## 10. Testing
-
-Unit tests are used to verify application validation and logic where applicable.
-
-## 11. GitHub Actions
-
-GitHub Actions automatically builds the Android project and runs the project's automated tests when changes are pushed to the repository.
-
-## 12. Database
-
-SQL Server stores application data including:
-
-- Users
-- Books
-- Borrowing records
-- Reservations
-- Reviews
-- Reading lists
-
-## 13. Security
-
-The system uses:
-
-- HTTPS
-- Authentication
+- JWT authentication
 - Password hashing
-- Authorization
+- Role-based authorization
+- HTTPS
 
-These mechanisms help protect user accounts and application data.
+### Development and Version Control
 
-## 14. Installation
+- Git
+- GitHub
+- GitHub Actions
 
-1. Clone the repository.
-2. Open the Android project in Android Studio.
-3. Open the API project in Visual Studio.
-4. Configure the SQL Server database.
-5. Run the required database migrations.
-6. Start the API.
-7. Configure the Android application with the API URL.
-8. Build and run the Android application.
+---
 
+## 4. Architecture
 
+LibLink uses a client-server architecture.
 
+The Android application communicates with the ASP.NET Core Web API through HTTPS REST API requests. Retrofit is used in the Android application to communicate with the backend.
+
+The backend processes requests and uses Entity Framework Core to communicate with the SQL Server database.
