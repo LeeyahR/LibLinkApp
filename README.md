@@ -80,3 +80,5 @@ LibLink uses a client-server architecture.
 The Android application communicates with the ASP.NET Core Web API through HTTPS REST API requests. Retrofit is used in the Android application to communicate with the backend.
 
 The backend processes requests and uses Entity Framework Core to communicate with the SQL Server database.
+
+YouTube Link: https://youtu.be/uzDr4IPr1ns
