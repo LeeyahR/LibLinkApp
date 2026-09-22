@@ -8,6 +8,7 @@ import com.example.liblinkapp.models.LoginResponse
 import com.example.liblinkapp.models.RegisterRequest
 import com.example.liblinkapp.models.RegisterResponse
 import com.example.liblinkapp.models.Reservation
+import com.example.liblinkapp.models.Review
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -92,4 +93,18 @@ interface ApiService {
     suspend fun getReservations(
         @Path("userId") userId: Int
     ): Response<List<Reservation>>
+
+    // =========================
+// REVIEWS
+// =========================
+
+    @GET("api/reviews/book/{bookId}")
+    suspend fun getReviews(
+        @Path("bookId") bookId: Int
+    ): Response<List<Review>>
+
+    @POST("api/reviews")
+    suspend fun addReview(
+        @Body review: Review
+    ): Response<Review>
 }

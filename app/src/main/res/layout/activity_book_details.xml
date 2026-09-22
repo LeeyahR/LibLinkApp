@@ -99,6 +99,51 @@
             android:textAllCaps="false"
             tools:ignore="HardcodedText,VisualLintButtonSize" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Reviews &amp; Ratings"
+            android:textColor="#162544"
+            android:textSize="21sp"
+            android:textStyle="bold" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:numStars="5"
+            android:stepSize="1.0"
+            android:rating="0" />
+
+        <EditText
+            android:id="@+id/edtReview"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_marginTop="10dp"
+            android:gravity="top"
+            android:hint="Write your review..."
+            android:inputType="textMultiLine"
+            android:padding="12dp" />
+
+        <Button
+            android:id="@+id/btnSubmitReview"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="10dp"
+            android:text="Submit Review"
+            android:textAllCaps="false" />
+
+        <TextView
+            android:id="@+id/txtReviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="No reviews yet."
+            android:textColor="#162544"
+            android:textSize="15sp" />
+
     </LinearLayout>
 
 </ScrollView>
