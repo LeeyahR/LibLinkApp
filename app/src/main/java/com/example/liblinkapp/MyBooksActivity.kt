@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.liblinkapp.api.ApiClient
 import com.example.liblinkapp.api.ApiService
 import com.example.liblinkapp.models.BorrowedBook
+import com.example.liblinkapp.models.Reservation
 import com.example.liblinkapp.utils.SessionManager
 import kotlinx.coroutines.launch
 
@@ -26,6 +27,7 @@ class MyBooksActivity : AppCompatActivity() {
 
     private lateinit var reservedBook: LinearLayout
     private lateinit var reservedBookTitle: TextView
+    private lateinit var reservedBookStatus : TextView
 
     private lateinit var btnReturn: Button
 
@@ -51,6 +53,7 @@ class MyBooksActivity : AppCompatActivity() {
 
         reservedBook = findViewById(R.id.reservedBook)
         reservedBookTitle = findViewById(R.id.reservedBookTitle)
+        reservedBookStatus = findViewById(R.id.reservedBookStatus)
 
         btnReturn = findViewById(R.id.btnReturn)
 
@@ -67,7 +70,7 @@ class MyBooksActivity : AppCompatActivity() {
             return
         }
 
-        loadBorrowedBooks()
+        loadMyBooks()
 
         btnReturn.setOnClickListener {
             returnBook()
@@ -133,11 +136,11 @@ class MyBooksActivity : AppCompatActivity() {
         if (::sessionManager.isInitialized &&
             sessionManager.isLoggedIn()
         ) {
-            loadBorrowedBooks()
+            loadMyBooks()
         }
     }
 
-    private fun loadBorrowedBooks() {
+    private fun loadMyBooks() {
 
         val userId = sessionManager.getUserId()
 
@@ -150,74 +153,76 @@ class MyBooksActivity : AppCompatActivity() {
 
             try {
 
-                val response =
-                    api.getBorrowings(userId)
+                // Load borrowed AND reserved books
+                loadBorrowedBooks(userId)
+                loadReservedBooks(userId)
 
-                if (response.isSuccessful) {
+            } catch (e: Exception) {
 
-                    val borrowings =
-                        response.body() ?: emptyList()
+                Toast.makeText(
+                    this@MyBooksActivity,
+                    "Could not load your books: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
 
-                    /*
-                     * Only show active borrowings.
-                     */
-                    val activeBorrowing =
-                        borrowings.firstOrNull {
-                            it.returnedDate == null &&
-                                    it.status.lowercase() != "returned"
-                        }
+    private suspend fun loadBorrowedBooks(userId: Int) {
 
-                    if (activeBorrowing != null) {
+        try {
 
-                        currentBorrowing =
-                            activeBorrowing
+            val response =
+                api.getBorrowings(userId)
 
-                        borrowedBookTitle.text =
-                            activeBorrowing.book?.title
-                                ?: "Borrowed Book"
+            if (response.isSuccessful) {
 
-                        dueDate.text =
-                            if (
-                                activeBorrowing.dueDate != null
-                            ) {
-                                "Due: ${formatDate(activeBorrowing.dueDate)}"
-                            } else {
-                                "Due date unavailable"
-                            }
+                val borrowings =
+                    response.body() ?: emptyList()
 
-                        borrowedBook.visibility =
-                            View.VISIBLE
-
-                        btnReturn.visibility =
-                            View.VISIBLE
-
-                    } else {
-
-                        currentBorrowing = null
-
-                        borrowedBook.visibility =
-                            View.GONE
-
-                        btnReturn.visibility =
-                            View.GONE
+                /*
+                 * Only show active borrowings.
+                 */
+                val activeBorrowing =
+                    borrowings.firstOrNull {
+                        it.returnedDate == null &&
+                                it.status.lowercase() != "returned"
                     }
 
+                if (activeBorrowing != null) {
+
+                    currentBorrowing =
+                        activeBorrowing
+
+                    borrowedBookTitle.text =
+                        activeBorrowing.book?.title
+                            ?: "Borrowed Book"
+
+                    dueDate.text =
+                        if (activeBorrowing.dueDate != null) {
+                            "Due: ${formatDate(activeBorrowing.dueDate)}"
+                        } else {
+                            "Due date unavailable"
+                        }
+
+                    borrowedBook.visibility =
+                        View.VISIBLE
+
+                    btnReturn.visibility =
+                        View.VISIBLE
+
                 } else {
+
+                    currentBorrowing = null
 
                     borrowedBook.visibility =
                         View.GONE
 
                     btnReturn.visibility =
                         View.GONE
-
-                    Toast.makeText(
-                        this@MyBooksActivity,
-                        "Could not load borrowed books.",
-                        Toast.LENGTH_LONG
-                    ).show()
                 }
 
-            } catch (e: Exception) {
+            } else {
 
                 borrowedBook.visibility =
                     View.GONE
@@ -227,11 +232,116 @@ class MyBooksActivity : AppCompatActivity() {
 
                 Toast.makeText(
                     this@MyBooksActivity,
-                    "Could not connect to API: ${e.message}",
+                    "Could not load borrowed books.",
                     Toast.LENGTH_LONG
                 ).show()
             }
+
+        } catch (e: Exception) {
+
+            borrowedBook.visibility =
+                View.GONE
+
+            btnReturn.visibility =
+                View.GONE
+
+            Toast.makeText(
+                this@MyBooksActivity,
+                "Could not load borrowed books: ${e.message}",
+                Toast.LENGTH_LONG
+            ).show()
         }
+    }
+
+    private suspend fun loadReservedBooks(userId: Int) {
+
+        try {
+
+            val response =
+                api.getReservations(userId)
+
+            if (response.isSuccessful) {
+
+                val reservations =
+                    response.body() ?: emptyList()
+
+                /*
+                 * Find an active reservation.
+                 */
+                val activeReservation =
+                    reservations.firstOrNull {
+                        it.status.lowercase() != "cancelled" &&
+                                it.status.lowercase() != "completed"
+                    }
+
+                if (activeReservation != null) {
+
+                    showReservedBook(
+                        activeReservation
+                    )
+
+                } else {
+
+                    reservedBook.visibility =
+                        View.GONE
+                }
+
+            } else {
+
+                reservedBook.visibility =
+                    View.GONE
+
+                Toast.makeText(
+                    this@MyBooksActivity,
+                    "Could not load reserved books.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
+        } catch (e: Exception) {
+
+            reservedBook.visibility =
+                View.GONE
+
+            Toast.makeText(
+                this@MyBooksActivity,
+                "Could not load reservations: ${e.message}",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    private fun showReservedBook(
+        reservation: Reservation
+    ) {
+
+        reservedBookTitle.text =
+            reservation.book?.title
+                ?: "Reserved Book"
+
+        reservedBookStatus.text =
+            when (
+                reservation.status.lowercase()
+            ) {
+
+                "pending" ->
+                    "Reservation pending"
+
+                "ready" ->
+                    "Ready for collection"
+
+                "completed" ->
+                    "Completed"
+
+                "cancelled" ->
+                    "Cancelled"
+
+                else ->
+                    reservation.status
+            }
+
+        reservedBook.visibility =
+            View.VISIBLE
     }
 
     private fun returnBook() {
@@ -276,6 +386,8 @@ class MyBooksActivity : AppCompatActivity() {
                         "Book returned successfully.",
                         Toast.LENGTH_LONG
                     ).show()
+
+                    loadMyBooks()
 
                 } else {
 

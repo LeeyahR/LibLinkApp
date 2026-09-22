@@ -172,13 +172,13 @@
                         tools:ignore="HardcodedText" />
 
                     <TextView
+                        android:id="@+id/reservedBookStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:text="Ready for collection"
+                        android:text="Reservation pending"
                         android:textColor="#3C805B"
-                        android:textSize="12sp"
-                        tools:ignore="HardcodedText" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
