@@ -1,19 +1,19 @@
-# LibLink
+# LibLinkApp
 
 ## 1. Project Overview
-LibLink is a mobile Library Management System designed for
-university students and library administrators.
+
+LibLink is a mobile Library Management System designed for university students and library administrators.
 
 ## 2. Purpose
-The application allows students to search, borrow and reserve
-library resources through a mobile Android application.
+
+The application allows students to browse, search, borrow and reserve library books through an Android mobile application.
 
 ## 3. Technologies
+
 - Android Studio
 - Kotlin
 - XML
 - Retrofit
-- MVVM
 - ASP.NET Core Web API
 - C#
 - Entity Framework Core
@@ -23,107 +23,132 @@ library resources through a mobile Android application.
 - GitHub Actions
 
 ## 4. Architecture
-- Android App
-- Retrofit
+
+LibLink uses the following architecture:
+
+- Android application
+- Retrofit HTTP client
 - HTTPS REST API
+- ASP.NET Core Web API
 - Entity Framework Core
-- SQL Server
+- SQL Server database
+
+The Android application communicates with the backend through REST API endpoints using Retrofit.
 
 ## 5. Features
+
 ### Student
+
 - Registration
 - Login
 - Book catalogue
-- Search
+- Book search
 - Book details
 - Borrowing
-- Returning
+- Returning books
 - Reservations
 - Reading lists
-- Reviews
+- Reviews and ratings
 - Profile
 - Settings
 
 ### Administrator
+
 - Add books
 - Update books
 - Delete books
-- Manage copies
+- Manage book copies
 - Monitor borrowing
 
 ## 6. Authentication
-LibLink uses authenticated API requests and role-based
-authorization.
+
+LibLink uses authenticated API requests and role-based authorization to control access to application functionality.
 
 ## 7. REST API
+
 ### Authentication
-- POST /api/auth/register
-- POST /api/auth/login
+
+- POST /api/auth/register`
+- POST /api/auth/login`
 
 ### Books
-- GET /api/books
-- GET /api/books/{id}
-- GET /api/books/search
-- POST /api/books
-- PUT /api/books/{id}
-- DELETE /api/books/{id}
+
+- GET /api/books`
+- GET /api/books/{id}`
+- GET /api/books/search`
+- POST /api/books`
+- PUT /api/books/{id}`
+- DELETE /api/books/{id}`
 
 ### Borrowing
-- POST /api/borrowings
-- PUT /api/borrowings/{id}/return
-- GET /api/borrowings/user/{userId}
+
+- POST /api/borrowings`
+- PUT /api/borrowings/{id}/return`
+- GET /api/borrowings/user/{userId}`
 
 ### Reservations
-- POST /api/reservations
-- GET /api/reservations/user/{userId}
+
+- POST /api/reservations`
+- GET /api/reservations/user/{userId}`
 
 ### Reviews
-- GET /api/reviews/book/{bookId}
-- POST /api/reviews
+
+- GET /api/reviews/book/{bookId}`
+- POST /api/reviews`
 
 ### Reading Lists
-- POST /api/readingLists
-- GET /api/readingLists/user/{userId}
+
+- POST /api/readingLists`
+- GET /api/readingLists/user/{userId}`
 
 ## 8. Validation
-The application validates user input before API requests.
+
+The application validates user input before sending requests to the API.
 
 ## 9. Logging
-Android Log utilities are used to record important application
-states and API operations.
 
-## 10. Unit Testing
-Automated unit tests verify validation and application logic.
+Android logging utilities are used during development to record important application states and API operations.
+
+## 10. Testing
+
+Unit tests are used to verify application validation and logic where applicable.
 
 ## 11. GitHub Actions
-GitHub Actions automatically builds the Android project and
-executes unit tests after repository changes.
+
+GitHub Actions automatically builds the Android project and runs the project's automated tests when changes are pushed to the repository.
 
 ## 12. Database
-SQL Server stores users, books, borrowing records,
-reservations, reviews and reading lists.
+
+SQL Server stores application data including:
+
+- Users
+- Books
+- Borrowing records
+- Reservations
+- Reviews
+- Reading lists
 
 ## 13. Security
+
+The system uses:
+
 - HTTPS
 - Authentication
-- Password Hashing
+- Password hashing
 - Authorization
 
-These are used to protect application data.
+These mechanisms help protect user accounts and application data.
 
 ## 14. Installation
-1. Clone repository.
-2. Open Android project in Android Studio.
-3. Open API in Visual Studio.
-4. Configure SQL Server.
-5. Run database migrations.
-6. Start API.
-7. Configure API URL.
-8. Build Android application.
 
-
-
-
+1. Clone the repository.
+2. Open the Android project in Android Studio.
+3. Open the API project in Visual Studio.
+4. Configure the SQL Server database.
+5. Run the required database migrations.
+6. Start the API.
+7. Configure the Android application with the API URL.
+8. Build and run the Android application.
 
 
 
