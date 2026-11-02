@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.devtools.ksp") version "2.3.10"
 }
 
 android {
@@ -56,5 +57,15 @@ dependencies {
 
     // Google Identity
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
+    // Room Database
+    implementation("androidx.room:room-runtime:2.8.5")
+    ksp("androidx.room:room-compiler:2.8.5")
+
+    // WorkManager
+    implementation("androidx.work:work-runtime-ktx:2.12.0")
+
+    // Lifecycle and Coroutines
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
 
 }
