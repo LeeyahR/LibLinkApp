@@ -19,6 +19,8 @@ import com.example.liblinkapp.api.ApiClient
 import com.example.liblinkapp.api.ApiService
 import com.example.liblinkapp.models.Book
 import kotlinx.coroutines.launch
+import com.example.liblinkapp.database.BookEntity
+import com.example.liblinkapp.database.LibLinkDatabase
 
 class BrowseActivity : AppCompatActivity() {
 
@@ -27,6 +29,8 @@ class BrowseActivity : AppCompatActivity() {
 
     private lateinit var api: ApiService
 
+    private lateinit var database: LibLinkDatabase
+
     private var allBooks: List<Book> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +38,8 @@ class BrowseActivity : AppCompatActivity() {
 
         enableEdgeToEdge()
         setContentView(R.layout.activity_browse)
+
+        database = LibLinkDatabase.getDatabase(this)
 
         searchBooks = findViewById(R.id.searchBooks)
         bookList = findViewById(R.id.bookList)
@@ -100,42 +106,68 @@ class BrowseActivity : AppCompatActivity() {
     }
 
     private fun loadBooks() {
-
         lifecycleScope.launch {
-
             try {
-
-                val response =
-                    api.getBooks()
+                val response = api.getBooks()
 
                 if (response.isSuccessful) {
+                    val books = response.body() ?: emptyList()
 
-                    allBooks =
-                        response.body()
-                            ?: emptyList()
+                    // Update the in-memory list.
+                    allBooks = books
 
-                    filterBooks(
-                        searchBooks.text.toString()
+                    // Save the latest API results locally.
+                    database.libLinkDao().saveBooks(
+                        books.map { BookEntity.fromBook(it) }
                     )
 
-                } else {
+                    filterBooks(searchBooks.text.toString())
 
                     Toast.makeText(
                         this@BrowseActivity,
-                        "Could not load books. " +
-                                "Server returned ${response.code()}",
-                        Toast.LENGTH_LONG
+                        "Books updated successfully.",
+                        Toast.LENGTH_SHORT
                     ).show()
+
+                } else {
+                    loadCachedBooks(
+                        "Server returned HTTP ${response.code()}."
+                    )
                 }
 
-            } catch (e: Exception) {
+            } catch (e: java.io.IOException) {
+                loadCachedBooks("You are offline. Showing saved books.")
 
-                Toast.makeText(
-                    this@BrowseActivity,
-                    "Could not connect to API: ${e.message}",
-                    Toast.LENGTH_LONG
-                ).show()
+            } catch (e: Exception) {
+                loadCachedBooks("Could not refresh books. Showing saved books.")
             }
+        }
+    }
+
+    private suspend fun loadCachedBooks(message: String) {
+        try {
+            val cachedBooks = database.libLinkDao().getAllBooks()
+
+            allBooks = cachedBooks.map { it.toBook() }
+
+            filterBooks(searchBooks.text.toString())
+
+            Toast.makeText(
+                this@BrowseActivity,
+                if (cachedBooks.isEmpty()) {
+                    "$message No saved books are available yet."
+                } else {
+                    "$message ${cachedBooks.size} saved books loaded."
+                },
+                Toast.LENGTH_LONG
+            ).show()
+
+        } catch (e: Exception) {
+            Toast.makeText(
+                this@BrowseActivity,
+                "Could not load saved books: ${e.message}",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
