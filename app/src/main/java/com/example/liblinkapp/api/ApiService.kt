@@ -9,6 +9,8 @@ import com.example.liblinkapp.models.RegisterRequest
 import com.example.liblinkapp.models.RegisterResponse
 import com.example.liblinkapp.models.Reservation
 import com.example.liblinkapp.models.Review
+import com.example.liblinkapp.models.GoogleLoginRequest
+import com.example.liblinkapp.models.GoogleLoginResponse
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -34,6 +36,12 @@ interface ApiService {
         @Body request: LoginRequest
     ): Response<LoginResponse>
 
+    // GOOGLE AUTHENTICATION
+
+    @POST("api/auth/google")
+    suspend fun googleLogin(
+        @Body request: GoogleLoginRequest
+    ): Response<GoogleLoginResponse>
 
     // =========================
     // BOOKS

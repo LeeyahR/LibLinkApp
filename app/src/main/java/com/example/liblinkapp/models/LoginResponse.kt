@@ -17,5 +17,8 @@ data class LoginResponse(
     val email: String,
 
     @SerializedName("role")
-    val role: String
+    val role: String,
+
+    @SerializedName("token")
+    val token: String? = null
 )
