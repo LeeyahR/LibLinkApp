@@ -98,6 +98,53 @@
             android:textSize="16sp"
             tools:ignore="HardcodedText,VisualLintButtonSize" />
 
+        <!-- OR separator -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="#D1D5DB"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  OR  "
+                android:textColor="#6B7280"
+                android:textStyle="bold"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="#D1D5DB"/>
+
+        </LinearLayout>
+
+        <!-- Google Registration -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGoogleRegister"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:text="Continue with Google"
+            android:textAllCaps="false"
+            android:textColor="#14213D"
+            android:textSize="16sp"
+            android:backgroundTint="#FFFFFF"
+            app:strokeColor="#D1D5DB"
+            app:strokeWidth="1dp"
+            app:cornerRadius="8dp"
+            app:icon="@drawable/google_logo"
+            app:iconGravity="textStart"
+            app:iconTint="@null"/>
+
         <TextView
             android:id="@+id/txtBackToLogin"
             android:layout_width="match_parent"
