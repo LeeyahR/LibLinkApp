@@ -14,6 +14,9 @@ import com.example.liblinkapp.api.ApiClient
 import com.example.liblinkapp.api.ApiService
 import com.example.liblinkapp.utils.SessionManager
 import kotlinx.coroutines.launch
+import com.example.liblinkapp.database.LibLinkDatabase
+import com.example.liblinkapp.database.PendingActionEntity
+import java.io.IOException
 
 class BorrowConfirmationActivity : AppCompatActivity() {
 
@@ -23,6 +26,8 @@ class BorrowConfirmationActivity : AppCompatActivity() {
     private lateinit var api: ApiService
     private lateinit var sessionManager: SessionManager
 
+    private lateinit var database: LibLinkDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -30,6 +35,8 @@ class BorrowConfirmationActivity : AppCompatActivity() {
         setContentView(
             R.layout.activity_borrow_confirmation
         )
+
+        database = LibLinkDatabase.getDatabase(this)
 
         btnHome =
             findViewById(R.id.btnHome)
@@ -171,49 +178,39 @@ class BorrowConfirmationActivity : AppCompatActivity() {
         bookId: Int,
         bookTitle: String
     ) {
-
-        val userId =
-            sessionManager.getUserId()
-
         lifecycleScope.launch {
-
             try {
-
-                val response =
-                    api.borrowBook(
-                        userId = userId,
-                        bookId = bookId
-                    )
+                val response = api.borrowBook(
+                    userId = userId,
+                    bookId = bookId
+                )
 
                 if (response.isSuccessful) {
-
-                    findViewById<TextView>(
-                        R.id.confirmationTitle
-                    ).text =
+                    findViewById<TextView>(R.id.confirmationTitle).text =
                         "Book Borrowed"
 
-                    findViewById<TextView>(
-                        R.id.confirmationMessage
-                    ).text =
+                    findViewById<TextView>(R.id.confirmationMessage).text =
                         "$bookTitle has been added to your borrowed books."
 
                 } else {
-
-                    val error =
-                        response.errorBody()
-                            ?.string()
-                            ?.trim()
+                    val error = response.errorBody()?.string()?.trim()
 
                     showError(
-                        "Borrow failed.\n\nHTTP ${response.code()}\n\nAPI response:\n${error ?: "EMPTY RESPONSE BODY"}"
+                        "Borrow failed.\n\nHTTP ${response.code()}\n\n" +
+                                "API response:\n${error ?: "EMPTY RESPONSE BODY"}"
                     )
                 }
 
-            } catch (e: Exception) {
-
-                showError(
-                    "Could not connect to API: ${e.message}"
+            } catch (e: IOException) {
+                saveOfflineRequest(
+                    userId = userId,
+                    bookId = bookId,
+                    actionType = "BORROW",
+                    bookTitle = bookTitle
                 )
+
+            } catch (e: Exception) {
+                showError("Borrow request failed: ${e.message}")
             }
         }
     }
@@ -223,51 +220,64 @@ class BorrowConfirmationActivity : AppCompatActivity() {
         bookId: Int,
         bookTitle: String
     ) {
-
-        val userId =
-            sessionManager.getUserId()
-
         lifecycleScope.launch {
-
             try {
-
-                val response =
-                    api.reserveBook(
-                        userId = userId,
-                        bookId = bookId
-                    )
+                val response = api.reserveBook(
+                    userId = userId,
+                    bookId = bookId
+                )
 
                 if (response.isSuccessful) {
-
-                    findViewById<TextView>(
-                        R.id.confirmationTitle
-                    ).text =
+                    findViewById<TextView>(R.id.confirmationTitle).text =
                         "Book Reserved"
 
-                    findViewById<TextView>(
-                        R.id.confirmationMessage
-                    ).text =
+                    findViewById<TextView>(R.id.confirmationMessage).text =
                         "$bookTitle has been added to your reservations."
 
                 } else {
-
-                    val error =
-                        response.errorBody()
-                            ?.string()
-                            ?.trim()
+                    val error = response.errorBody()?.string()?.trim()
 
                     showError(
-                        "Reservation failed.\n\nHTTP ${response.code()}\n\nAPI response:\n${error ?: "EMPTY RESPONSE BODY"}"
+                        "Reservation failed.\n\nHTTP ${response.code()}\n\n" +
+                                "API response:\n${error ?: "EMPTY RESPONSE BODY"}"
                     )
                 }
 
-            } catch (e: Exception) {
-
-                showError(
-                    "Could not connect to API: ${e.message}"
+            } catch (e: IOException) {
+                saveOfflineRequest(
+                    userId = userId,
+                    bookId = bookId,
+                    actionType = "RESERVE",
+                    bookTitle = bookTitle
                 )
+
+            } catch (e: Exception) {
+                showError("Reservation request failed: ${e.message}")
             }
         }
+    }
+
+    private suspend fun saveOfflineRequest(
+        userId: Int,
+        bookId: Int,
+        actionType: String,
+        bookTitle: String
+    ) {
+        val pendingAction = PendingActionEntity(
+            userId = userId,
+            bookId = bookId,
+            actionType = actionType,
+            status = "PENDING"
+        )
+
+        database.libLinkDao().addPendingAction(pendingAction)
+
+        findViewById<TextView>(R.id.confirmationTitle).text =
+            "Request Saved Offline"
+
+        findViewById<TextView>(R.id.confirmationMessage).text =
+            "$bookTitle has been saved on this device. " +
+                    "It will be submitted when your connection is restored."
     }
 
     private fun showError(
