@@ -4,11 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.liblinkapp"
-    compileSdk {
-        version = release(37) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.example.liblinkapp"
@@ -53,5 +49,12 @@ dependencies {
 
     implementation("com.squareup.retrofit2:retrofit:3.0.0")
     implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+
+    // Google Credential Manager
+    implementation("androidx.credentials:credentials:1.5.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
+
+    // Google Identity
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
 
 }
