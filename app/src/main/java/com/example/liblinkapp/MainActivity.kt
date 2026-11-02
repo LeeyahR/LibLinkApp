@@ -32,7 +32,7 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 
 import kotlinx.coroutines.launch
-
+import com.example.liblinkapp.sync.SyncScheduler
 class MainActivity : AppCompatActivity() {
 
     private lateinit var emailEditText: EditText
@@ -257,6 +257,7 @@ class MainActivity : AppCompatActivity() {
 
             // EXISTING OR NEWLY REGISTERED USER
             completeLogin(result)
+            SyncScheduler.scheduleSync(this)
 
         } catch (e: Exception) {
 
@@ -375,6 +376,7 @@ class MainActivity : AppCompatActivity() {
             role = response.role ?: "Student",
             token = token
         )
+        SyncScheduler.scheduleSync(this)
 
         Toast.makeText(
             this,

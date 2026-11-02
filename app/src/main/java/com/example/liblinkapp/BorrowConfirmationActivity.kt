@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import com.example.liblinkapp.database.LibLinkDatabase
 import com.example.liblinkapp.database.PendingActionEntity
 import java.io.IOException
+import com.example.liblinkapp.sync.SyncScheduler
 
 class BorrowConfirmationActivity : AppCompatActivity() {
 
@@ -271,6 +272,9 @@ class BorrowConfirmationActivity : AppCompatActivity() {
         )
 
         database.libLinkDao().addPendingAction(pendingAction)
+
+        // Schedule automatic synchronisation.
+        SyncScheduler.scheduleSync(this)
 
         findViewById<TextView>(R.id.confirmationTitle).text =
             "Request Saved Offline"
