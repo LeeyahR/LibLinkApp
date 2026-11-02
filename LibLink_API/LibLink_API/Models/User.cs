@@ -16,6 +16,9 @@ namespace LibLink_API.Models
 
         public string Role { get; set; } = "Student";
 
+        // Google SSO
+        public string? GoogleSubject { get; set; }
+
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
         public ICollection<Borrowing> Borrowings { get; set; }
