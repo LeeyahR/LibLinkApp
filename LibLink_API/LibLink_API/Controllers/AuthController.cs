@@ -40,7 +40,7 @@ namespace LibLink_API.Controllers
             var email = request.Email.Trim().ToLowerInvariant();
             var studentNumber = request.StudentNumber.Trim();
 
-            if (await _context.User.AnyAsync(x => x.Email.ToLower() == email))
+            if (await _context.User.AnyAsync(x => x.Email == email))
             {
                 return BadRequest("An account with this email already exists.");
             }
@@ -78,7 +78,7 @@ namespace LibLink_API.Controllers
         {
             var email = request.Email.Trim().ToLowerInvariant();
 
-            var user = await _context.User.FirstOrDefaultAsync(x => x.Email.ToLower() == email);
+            var user = await _context.User.FirstOrDefaultAsync(x => x.Email == email);
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
