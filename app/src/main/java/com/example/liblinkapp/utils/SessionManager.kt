@@ -45,6 +45,15 @@ class SessionManager(context: Context) {
     fun isLoggedIn(): Boolean =
         preferences.getBoolean("loggedIn", false)
 
+    fun isBiometricEnabled(): Boolean =
+        preferences.getBoolean("biometricEnabled", false)
+
+    fun setBiometricEnabled(enabled: Boolean) {
+        preferences.edit()
+            .putBoolean("biometricEnabled", enabled)
+            .apply()
+    }
+
     fun logout() {
         preferences.edit()
             .clear()
