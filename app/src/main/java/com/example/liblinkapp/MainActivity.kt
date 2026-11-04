@@ -33,6 +33,10 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingExcept
 
 import kotlinx.coroutines.launch
 import com.example.liblinkapp.sync.SyncScheduler
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricManager.Authenticators
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 class MainActivity : AppCompatActivity() {
 
     private lateinit var emailEditText: EditText
@@ -56,10 +60,6 @@ class MainActivity : AppCompatActivity() {
         sessionManager = SessionManager(this)
         credentialManager = CredentialManager.create(this)
 
-        if (sessionManager.isLoggedIn()) {
-            navigateToHome()
-            return
-        }
 
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
@@ -94,6 +94,17 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
+        // BIOMETRIC SESSION UNLOCK
+        if (sessionManager.isLoggedIn()) {
+            if (sessionManager.isBiometricEnabled()) {
+                showBiometricPrompt {
+                    navigateToHome()
+                }
+            } else {
+                navigateToHome()
+            }
+        }
+
         ViewCompat.setOnApplyWindowInsetsListener(
             findViewById(R.id.main)
         ) { view, insets ->
@@ -111,6 +122,158 @@ class MainActivity : AppCompatActivity() {
 
             insets
         }
+    }
+
+    // =====================================
+    // BIOMETRIC AVAILABILITY
+    // =====================================
+
+    private fun isBiometricAvailable(): Boolean {
+        val biometricManager = BiometricManager.from(this)
+
+        return when (
+            biometricManager.canAuthenticate(
+                Authenticators.BIOMETRIC_STRONG or
+                        Authenticators.BIOMETRIC_WEAK
+            )
+        ) {
+            BiometricManager.BIOMETRIC_SUCCESS -> true
+
+            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
+                Toast.makeText(
+                    this,
+                    "This device does not support biometric authentication.",
+                    Toast.LENGTH_LONG
+                ).show()
+                false
+            }
+
+            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
+                Toast.makeText(
+                    this,
+                    "Biometric hardware is currently unavailable.",
+                    Toast.LENGTH_LONG
+                ).show()
+                false
+            }
+
+            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+                Toast.makeText(
+                    this,
+                    "No fingerprint or face is enrolled on this device.",
+                    Toast.LENGTH_LONG
+                ).show()
+                false
+            }
+
+            else -> {
+                Toast.makeText(
+                    this,
+                    "Biometric authentication is not available.",
+                    Toast.LENGTH_LONG
+                ).show()
+                false
+            }
+        }
+    }
+
+    // =====================================
+    // BIOMETRIC AUTHENTICATION PROMPT
+    // =====================================
+
+    private fun showBiometricPrompt(
+        onAuthenticationSuccess: () -> Unit
+    ) {
+        if (!isBiometricAvailable()) {
+            return
+        }
+
+        val executor = ContextCompat.getMainExecutor(this)
+
+        val biometricPrompt = BiometricPrompt(
+            this,
+            executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+
+                override fun onAuthenticationSucceeded(
+                    result: BiometricPrompt.AuthenticationResult
+                ) {
+                    super.onAuthenticationSucceeded(result)
+
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Biometric authentication successful.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    onAuthenticationSuccess()
+                }
+
+                override fun onAuthenticationError(
+                    errorCode: Int,
+                    errString: CharSequence
+                ) {
+                    super.onAuthenticationError(errorCode, errString)
+
+                    Toast.makeText(
+                        this@MainActivity,
+                        errString,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Fingerprint not recognised. Try again.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        )
+
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("LibLink biometric login")
+            .setSubtitle("Verify your identity to continue")
+            .setNegativeButtonText("Use password")
+            .setAllowedAuthenticators(
+                BiometricManager.Authenticators.BIOMETRIC_STRONG or
+                        BiometricManager.Authenticators.BIOMETRIC_WEAK
+            )
+            .build()
+
+        biometricPrompt.authenticate(promptInfo)
+    }
+
+    private fun offerBiometricSetup(onContinue: () -> Unit) {
+        if (!isBiometricAvailable()) {
+            // Biometrics aren't available or enrolled; continue with normal login.
+            onContinue()
+            return
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle("Enable biometric login?")
+            .setMessage(
+                "Would you like to use your fingerprint or face to unlock LibLink next time?"
+            )
+            .setPositiveButton("Enable") { _, _ ->
+                sessionManager.setBiometricEnabled(true)
+                Toast.makeText(
+                    this,
+                    "Biometric login enabled.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                onContinue()
+            }
+            .setNegativeButton("Not now") { _, _ ->
+                sessionManager.setBiometricEnabled(false)
+                onContinue()
+            }
+            .setCancelable(false)
+            .show()
     }
 
     // =====================================
@@ -378,13 +541,15 @@ class MainActivity : AppCompatActivity() {
         )
         SyncScheduler.scheduleSync(this)
 
-        Toast.makeText(
-            this,
-            "Google login successful!",
-            Toast.LENGTH_SHORT
-        ).show()
+        offerBiometricSetup {
+            Toast.makeText(
+                this@MainActivity,
+                "Google login successful",
+                Toast.LENGTH_SHORT
+            ).show()
 
-        navigateToHome()
+            navigateToHome()
+        }
     }
 
     // =====================================
@@ -438,13 +603,15 @@ class MainActivity : AppCompatActivity() {
                             token = result.token
                         )
 
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Login successful",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        offerBiometricSetup {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Login successful",
+                                Toast.LENGTH_SHORT
+                            ).show()
 
-                        navigateToHome()
+                            navigateToHome()
+                        }
 
                     } else {
 
