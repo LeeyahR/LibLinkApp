@@ -24,6 +24,7 @@ class AddBookActivity : AppCompatActivity() {
     private lateinit var edtTotalCopies : EditText
     private lateinit var edtAvailableCopies : EditText
     private lateinit var btnAddBook : Button
+    private lateinit var btnBack : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,9 +40,14 @@ class AddBookActivity : AppCompatActivity() {
         edtTotalCopies = findViewById(R.id.edtTotalCopies)
         edtAvailableCopies = findViewById(R.id.edtAvailableCopies)
         btnAddBook = findViewById(R.id.btnAddBook)
+        btnBack = findViewById(R.id.btnBack)
 
         btnAddBook.setOnClickListener {
             addBook()
+        }
+
+        btnBack.setOnClickListener {
+            finish()
         }
 
 
