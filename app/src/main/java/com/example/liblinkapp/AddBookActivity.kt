@@ -13,7 +13,7 @@ import com.example.liblinkapp.api.ApiClient
 import com.example.liblinkapp.models.AddBookRequest
 import kotlinx.coroutines.launch
 
-class AddBookActivity : AppCompatActivity() {
+class AddBookActivity : BaseActivity() {
 
     private lateinit var edtBookTitle : EditText
     private lateinit var edtAuthor : EditText

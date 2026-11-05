@@ -1,71 +1,80 @@
+// app/src/main/java/com/example/liblinkapp/SettingsActivity.kt
 package com.example.liblinkapp
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.LinearLayout
-import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SwitchCompat
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.liblinkapp.utils.LocaleHelper
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : BaseActivity() {
 
-    private lateinit var switchDarkMode: Switch
-    private lateinit var switchNotifications: Switch
-    private lateinit var switchDueDateReminders: Switch
-    private lateinit var switchLinkRequests: Switch
-    private lateinit var switchLargeText: Switch
-    private lateinit var switchHighContrast: Switch
-
+    private lateinit var switchDarkMode: SwitchCompat
+    private lateinit var switchNotifications: SwitchCompat
+    private lateinit var switchDueDateReminders: SwitchCompat
+    private lateinit var switchLinkRequests: SwitchCompat
+    private lateinit var switchBiometrics: SwitchCompat
+    private lateinit var switchLargeText: SwitchCompat
+    private lateinit var switchHighContrast: SwitchCompat
     private lateinit var rowLanguage: LinearLayout
     private lateinit var txtLanguageValue: TextView
+    private lateinit var bottomNav: BottomNavigationView
 
-    private lateinit var navHome: TextView
-    private lateinit var navBrowse: TextView
-    private lateinit var navMyBooks: TextView
-    private lateinit var navProfile: TextView
-
-    private val languageOptions = arrayOf("English", "Afrikaans", "isiZulu")
+    // Only two supported languages
+    private val languageOptions = arrayOf("English", "Afrikaans")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_settings)
 
-        switchDarkMode = findViewById(R.id.switchDarkMode)
-        switchNotifications = findViewById(R.id.switchNotifications)
+        // ── Bind views ──────────────────────────────────────────────────────────
+        switchDarkMode         = findViewById(R.id.switchDarkMode)
+        switchNotifications    = findViewById(R.id.switchNotifications)
         switchDueDateReminders = findViewById(R.id.switchDueDateReminders)
-        switchLinkRequests = findViewById(R.id.switchLinkRequests)
-        switchLargeText = findViewById(R.id.switchLargeText)
-        switchHighContrast = findViewById(R.id.switchHighContrast)
+        switchLinkRequests     = findViewById(R.id.switchLinkRequests)
+        switchBiometrics       = findViewById(R.id.switchBiometrics)
+        switchLargeText        = findViewById(R.id.switchLargeText)
+        switchHighContrast     = findViewById(R.id.switchHighContrast)
+        rowLanguage            = findViewById(R.id.rowLanguage)
+        txtLanguageValue       = findViewById(R.id.txtLanguageValue)
+        bottomNav              = findViewById(R.id.bottomNav)
 
-        rowLanguage = findViewById(R.id.rowLanguage)
-        txtLanguageValue = findViewById(R.id.txtLanguageValue)
+        // ── Load saved preferences ───────────────────────────────────────────────
+        val prefs = getSharedPreferences("LibLinkSettings", MODE_PRIVATE)
 
-        navHome = findViewById(R.id.navHome)
-        navBrowse = findViewById(R.id.navBrowse)
-        navMyBooks = findViewById(R.id.navMyBooks)
-        navProfile = findViewById(R.id.navProfile)
+        switchDarkMode.isChecked         = prefs.getBoolean("darkMode", false)
+        switchNotifications.isChecked    = prefs.getBoolean("notificationsEnabled", true)
+        switchDueDateReminders.isChecked = prefs.getBoolean("notifyDueDates", true)
+        switchLinkRequests.isChecked     = prefs.getBoolean("notifyLinkRequests", true)
+        switchLargeText.isChecked        = prefs.getBoolean("largeText", false)
+        switchHighContrast.isChecked     = prefs.getBoolean("highContrast", false)
+        txtLanguageValue.text            = prefs.getString("language", "English")
 
-        // Separate prefs file, kept independent of SessionManager's LibLinkSession
-        val preferences = getSharedPreferences("LibLinkSettings", MODE_PRIVATE)
+        // Check if biometrics is available on this device
+        val biometricManager = BiometricManager.from(this)
+        val biometricAvailable = biometricManager.canAuthenticate(
+            BiometricManager.Authenticators.BIOMETRIC_WEAK
+        ) == BiometricManager.BIOMETRIC_SUCCESS
 
-        switchDarkMode.isChecked = preferences.getBoolean("darkMode", false)
-        switchNotifications.isChecked = preferences.getBoolean("notificationsEnabled", true)
-        switchDueDateReminders.isChecked = preferences.getBoolean("notifyDueDates", true)
-        switchLinkRequests.isChecked = preferences.getBoolean("notifyLinkRequests", true)
-        switchLargeText.isChecked = preferences.getBoolean("largeText", false)
-        switchHighContrast.isChecked = preferences.getBoolean("highContrast", false)
-        txtLanguageValue.text = preferences.getString("language", "English")
+        switchBiometrics.isEnabled = biometricAvailable
+        switchBiometrics.isChecked = if (biometricAvailable) {
+            prefs.getBoolean("biometricsEnabled", false)
+        } else false
 
         setDependentSwitchesEnabled(switchNotifications.isChecked)
 
+        // ── Switch listeners — save every change immediately ──────────────────
         switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
-            preferences.edit().putBoolean("darkMode", isChecked).apply()
+            prefs.edit().putBoolean("darkMode", isChecked).apply()
             AppCompatDelegate.setDefaultNightMode(
                 if (isChecked) AppCompatDelegate.MODE_NIGHT_YES
                 else AppCompatDelegate.MODE_NIGHT_NO
@@ -73,62 +82,97 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         switchNotifications.setOnCheckedChangeListener { _, isChecked ->
-            preferences.edit().putBoolean("notificationsEnabled", isChecked).apply()
+            prefs.edit().putBoolean("notificationsEnabled", isChecked).apply()
             setDependentSwitchesEnabled(isChecked)
         }
 
         switchDueDateReminders.setOnCheckedChangeListener { _, isChecked ->
-            preferences.edit().putBoolean("notifyDueDates", isChecked).apply()
+            prefs.edit().putBoolean("notifyDueDates", isChecked).apply()
         }
 
         switchLinkRequests.setOnCheckedChangeListener { _, isChecked ->
-            preferences.edit().putBoolean("notifyLinkRequests", isChecked).apply()
+            prefs.edit().putBoolean("notifyLinkRequests", isChecked).apply()
+        }
+
+        switchBiometrics.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                // Verify identity before enabling biometrics
+                showBiometricPromptForSetup(
+                    onSuccess = {
+                        prefs.edit().putBoolean("biometricsEnabled", true).apply()
+                        Toast.makeText(this, "Biometric login enabled", Toast.LENGTH_SHORT).show()
+                    },
+                    onFail = {
+                        // Revert the switch if authentication failed
+                        switchBiometrics.isChecked = false
+                    }
+                )
+            } else {
+                prefs.edit().putBoolean("biometricsEnabled", false).apply()
+                Toast.makeText(this, "Biometric login disabled", Toast.LENGTH_SHORT).show()
+            }
         }
 
         switchLargeText.setOnCheckedChangeListener { _, isChecked ->
-            preferences.edit().putBoolean("largeText", isChecked).apply()
+            prefs.edit().putBoolean("largeText", isChecked).apply()
         }
 
         switchHighContrast.setOnCheckedChangeListener { _, isChecked ->
-            preferences.edit().putBoolean("highContrast", isChecked).apply()
+            prefs.edit().putBoolean("highContrast", isChecked).apply()
         }
 
+        // ── Language picker ──────────────────────────────────────────────────────
         rowLanguage.setOnClickListener {
             val current = languageOptions.indexOf(txtLanguageValue.text.toString())
                 .let { if (it == -1) 0 else it }
 
             android.app.AlertDialog.Builder(this)
-                .setTitle("Choose language")
+                .setTitle(getString(R.string.choose_language))
                 .setSingleChoiceItems(languageOptions, current) { dialog, which ->
                     val chosen = languageOptions[which]
                     txtLanguageValue.text = chosen
-                    preferences.edit().putString("language", chosen).apply()
-                    Toast.makeText(this, "Language set to $chosen", Toast.LENGTH_SHORT).show()
+                    prefs.edit().putString("language", chosen).apply()
+                    Toast.makeText(
+                        this,
+                        "${getString(R.string.language_set_to)} $chosen",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     dialog.dismiss()
+                    // Restart this activity so the locale takes effect immediately
+                    recreate()
                 }
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show()
         }
 
-        // Bottom nav
-        navHome.setOnClickListener {
-            startActivity(Intent(this, HomeActivity::class.java))
-            finish()
-        }
+        // ── Bottom navigation ────────────────────────────────────────────────────
+        // Mark Settings as selected
+        bottomNav.selectedItemId = R.id.navProfile   // Settings is under Profile nav
 
-        navBrowse.setOnClickListener {
-            startActivity(Intent(this, BrowseActivity::class.java))
-            finish()
-        }
-
-        navMyBooks.setOnClickListener {
-            startActivity(Intent(this, MyBooksActivity::class.java))
-            finish()
-        }
-
-        navProfile.setOnClickListener {
-            startActivity(Intent(this, ProfileActivity::class.java))
-            finish()
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navHome -> {
+                    startActivity(Intent(this, HomeActivity::class.java))
+                    finish()
+                    true
+                }
+                R.id.navBrowse -> {
+                    startActivity(Intent(this, BrowseActivity::class.java))
+                    finish()
+                    true
+                }
+                R.id.navMyBooks -> {
+                    startActivity(Intent(this, MyBooksActivity::class.java))
+                    finish()
+                    true
+                }
+                R.id.navProfile -> {
+                    startActivity(Intent(this, ProfileActivity::class.java))
+                    finish()
+                    true
+                }
+                else -> false
+            }
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -136,6 +180,53 @@ class SettingsActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    // ── Biometric prompt ───────────────────────────────────────────────────────
+    private fun showBiometricPromptForSetup(onSuccess: () -> Unit, onFail: () -> Unit) {
+        val executor = ContextCompat.getMainExecutor(this)
+
+        val callback = object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                runOnUiThread { onSuccess() }
+            }
+
+            override fun onAuthenticationFailed() {
+                runOnUiThread {
+                    Toast.makeText(
+                        this@SettingsActivity,
+                        "Authentication failed",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    onFail()
+                }
+            }
+
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                runOnUiThread {
+                    if (errorCode != BiometricPrompt.ERROR_USER_CANCELED &&
+                        errorCode != BiometricPrompt.ERROR_NEGATIVE_BUTTON
+                    ) {
+                        Toast.makeText(
+                            this@SettingsActivity,
+                            "Error: $errString",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    onFail()
+                }
+            }
+        }
+
+        val biometricPrompt = BiometricPrompt(this, executor, callback)
+
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle(getString(R.string.biometric_prompt_title))
+            .setSubtitle(getString(R.string.biometric_prompt_subtitle))
+            .setNegativeButtonText(getString(R.string.biometric_prompt_cancel))
+            .build()
+
+        biometricPrompt.authenticate(promptInfo)
     }
 
     private fun setDependentSwitchesEnabled(enabled: Boolean) {

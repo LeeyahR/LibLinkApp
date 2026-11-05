@@ -19,7 +19,7 @@ import com.example.liblinkapp.database.PendingActionEntity
 import java.io.IOException
 import com.example.liblinkapp.sync.SyncScheduler
 
-class BorrowConfirmationActivity : AppCompatActivity() {
+class BorrowConfirmationActivity : BaseActivity() {
 
     private lateinit var btnHome: Button
     private lateinit var btnMyBooks: Button

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- app/src/main/res/values-af/strings.xml -->
+<resources>
+    <string name="app_name">LibLink</string>
+    <string name="LibLink">LibLink</string>
+
+    <!-- Settings screen -->
+    <string name="settings_title">Instellings</string>
+    <string name="section_appearance">Voorkoms</string>
+    <string name="label_dark_mode">Donker modus</string>
+    <string name="section_notifications">Kennisgewings</string>
+    <string name="label_enable_notifications">Aktiveer kennisgewings</string>
+    <string name="label_due_date_reminders">Vervaldatum-herinnerings</string>
+    <string name="label_link_requests">Nuwe skakelversoeke</string>
+    <string name="section_security">Sekuriteit</string>
+    <string name="label_biometrics">Biometriese aanmelding</string>
+    <string name="label_biometrics_sub">Gebruik vingerafdruk of gesig om aan te meld</string>
+    <string name="section_language">Taal</string>
+    <string name="label_app_language">Toepassingstaal</string>
+    <string name="section_accessibility">Toeganklikheid</string>
+    <string name="label_large_text">Groot teks</string>
+    <string name="label_high_contrast">Hoë kontras</string>
+    <string name="app_version">LibLink v1.0</string>
+    <string name="language_set_to">Taal gestel op</string>
+    <string name="choose_language">Kies taal</string>
+    <string name="cancel">Kanselleer</string>
+
+    <!-- Bottom nav -->
+    <string name="nav_home">Tuis</string>
+    <string name="nav_browse">Blaai</string>
+    <string name="nav_my_books">My Boeke</string>
+    <string name="nav_profile">Profiel</string>
+
+    <!-- Biometric -->
+    <string name="biometric_prompt_title">Identiteitsbevestiging</string>
+    <string name="biometric_prompt_subtitle">Meld aan by LibLink</string>
+    <string name="biometric_prompt_cancel">Kanselleer</string>
+</resources>

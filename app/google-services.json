@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "410406613614",
+    "project_id": "liblink-f32be",
+    "storage_bucket": "liblink-f32be.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410406613614:android:9407dce8e71b955b1bac7f",
+        "android_client_info": {
+          "package_name": "com.example.liblinkapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDrq5R0ic_vvW6zccmT0FPhm-ttuRMdFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

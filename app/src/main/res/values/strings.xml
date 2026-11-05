@@ -1,5 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- app/src/main/res/values/strings.xml -->
 <resources>
-    <string name="app_name">LibLinkApp</string>
+    <string name="app_name">LibLink</string>
     <string name="LibLink">LibLink</string>
     <string name="default_web_client_id">167685238726-hq1rl789u37cuobhdj2cbo50boc88hk9.apps.googleusercontent.com</string>
+
+    <!-- Settings screen -->
+    <string name="settings_title">Settings</string>
+    <string name="section_appearance">Appearance</string>
+    <string name="label_dark_mode">Dark mode</string>
+    <string name="section_notifications">Notifications</string>
+    <string name="label_enable_notifications">Enable notifications</string>
+    <string name="label_due_date_reminders">Due date reminders</string>
+    <string name="label_link_requests">New link requests</string>
+    <string name="section_security">Security</string>
+    <string name="label_biometrics">Biometric login</string>
+    <string name="label_biometrics_sub">Use fingerprint or face to sign in</string>
+    <string name="section_language">Language</string>
+    <string name="label_app_language">App language</string>
+    <string name="section_accessibility">Accessibility</string>
+    <string name="label_large_text">Large text</string>
+    <string name="label_high_contrast">High contrast</string>
+    <string name="app_version">LibLink v1.0</string>
+    <string name="language_set_to">Language set to</string>
+    <string name="choose_language">Choose language</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Bottom nav -->
+    <string name="nav_home">Home</string>
+    <string name="nav_browse">Browse</string>
+    <string name="nav_my_books">My Books</string>
+    <string name="nav_profile">Profile</string>
+
+    <!-- Biometric -->
+    <string name="biometric_prompt_title">Identity Verification</string>
+    <string name="biometric_prompt_subtitle">Sign in to LibLink</string>
+    <string name="biometric_prompt_cancel">Cancel</string>
 </resources>

@@ -25,7 +25,7 @@ import com.example.liblinkapp.models.GoogleLoginRequest
 import kotlinx.coroutines.launch
 import com.example.liblinkapp.sync.SyncScheduler
 import com.example.liblinkapp.utils.SessionManager
-class RegisterActivity : AppCompatActivity() {
+class RegisterActivity : BaseActivity() {
 
     private lateinit var registerName: EditText
     private lateinit var registerEmail: EditText

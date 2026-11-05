@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- app/src/main/res/menu/bottom_nav_menu.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navHome"
+        android:title="@string/nav_home"
+        android:icon="@drawable/ic_nav_home" />
+
+    <item
+        android:id="@+id/navBrowse"
+        android:title="@string/nav_browse"
+        android:icon="@drawable/ic_nav_browse" />
+
+    <item
+        android:id="@+id/navMyBooks"
+        android:title="@string/nav_my_books"
+        android:icon="@drawable/ic_nav_books" />
+
+    <item
+        android:id="@+id/navProfile"
+        android:title="@string/nav_profile"
+        android:icon="@drawable/ic_nav_profile" />
+
+</menu>

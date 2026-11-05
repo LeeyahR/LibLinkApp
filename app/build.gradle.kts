@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.devtools.ksp") version "2.3.10"
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -70,5 +71,10 @@ dependencies {
 
     //Biometric authentication
     implementation("androidx.biometric:biometric:1.1.0")
+
+    // Firebase (FCM)                                ← NEW
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    implementation("com.google.firebase:firebase-messaging-ktx")
+    implementation("com.google.firebase:firebase-analytics-ktx")
 
 }

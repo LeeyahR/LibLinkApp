@@ -19,7 +19,7 @@ import com.example.liblinkapp.models.Reservation
 import com.example.liblinkapp.utils.SessionManager
 import kotlinx.coroutines.launch
 
-class MyBooksActivity : AppCompatActivity() {
+class MyBooksActivity : BaseActivity() {
 
     private lateinit var borrowedBook: LinearLayout
     private lateinit var borrowedBookTitle: TextView

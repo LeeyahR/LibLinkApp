@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import com.example.liblinkapp.database.BookEntity
 import com.example.liblinkapp.database.LibLinkDatabase
 
-class BrowseActivity : AppCompatActivity() {
+class BrowseActivity : BaseActivity() {
 
     private lateinit var searchBooks: EditText
     private lateinit var bookList: LinearLayout

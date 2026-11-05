@@ -19,7 +19,7 @@ import com.example.liblinkapp.models.Review
 import com.example.liblinkapp.utils.SessionManager
 import kotlinx.coroutines.launch
 
-class BookDetailsActivity : AppCompatActivity() {
+class BookDetailsActivity : BaseActivity() {
 
     private lateinit var bookTitle: TextView
     private lateinit var bookAuthor: TextView
