@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1015709200343",
+    "project_id": "liblink-38220",
+    "storage_bucket": "liblink-38220.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1015709200343:android:9463f059b239afbcfc6592",
+        "android_client_info": {
+          "package_name": "com.example.liblinkapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1015709200343-bq9gr06fi340cbs0h9dtqpglqg4shkio.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.liblinkapp",
+            "certificate_hash": "b658ead6e042c0af6148b3fb8003578ba54d924b"
+          }
+        },
+        {
+          "client_id": "1015709200343-am4o8446vmu7je6ehc1kl3hbitrndegl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmlwH7jq66aAE6vAtvnVbTsS6NHK3SYKY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1015709200343-am4o8446vmu7je6ehc1kl3hbitrndegl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
