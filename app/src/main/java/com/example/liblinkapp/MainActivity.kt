@@ -33,6 +33,9 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingExcept
 
 import kotlinx.coroutines.launch
 import com.example.liblinkapp.sync.SyncScheduler
+
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
+import android.util.Log
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators
 import androidx.biometric.BiometricPrompt
@@ -288,18 +291,15 @@ class MainActivity : AppCompatActivity() {
 
             try {
 
-                val googleIdOption =
-                    GetGoogleIdOption.Builder()
-                        .setFilterByAuthorizedAccounts(false)
-                        .setServerClientId(
-                            getString(R.string.default_web_client_id)
-                        )
-                        .setAutoSelectEnabled(false)
+                val googleOption =
+                    GetSignInWithGoogleOption.Builder(
+                        getString(R.string.default_web_client_id)
+                    )
                         .build()
 
                 val request =
                     GetCredentialRequest.Builder()
-                        .addCredentialOption(googleIdOption)
+                        .addCredentialOption(googleOption)
                         .build()
 
                 val result = credentialManager.getCredential(
@@ -320,12 +320,21 @@ class MainActivity : AppCompatActivity() {
                             credential.data
                         )
 
-                    // Send Google ID token to LibLink API.
+                    Log.d(
+                        "LibLinkGoogleSSO",
+                        "Google ID token retrieved successfully"
+                    )
+
                     authenticateWithBackend(
                         googleCredential.idToken
                     )
 
                 } else {
+
+                    Log.e(
+                        "LibLinkGoogleSSO",
+                        "Unexpected credential type: ${credential.type}"
+                    )
 
                     Toast.makeText(
                         this@MainActivity,
@@ -334,23 +343,27 @@ class MainActivity : AppCompatActivity() {
                     ).show()
                 }
 
-            } catch (e: GoogleIdTokenParsingException) {
-
-                Toast.makeText(
-                    this@MainActivity,
-                    "Unable to read Google ID token.",
-                    Toast.LENGTH_LONG
-                ).show()
-
             } catch (e: GetCredentialException) {
 
+                Log.e(
+                    "LibLinkGoogleSSO",
+                    "Credential error: ${e.javaClass.simpleName}: ${e.message}",
+                    e
+                )
+
                 Toast.makeText(
                     this@MainActivity,
-                    "Google sign-in cancelled or unavailable: ${e.message}",
+                    "Google sign-in failed: ${e.message}",
                     Toast.LENGTH_LONG
                 ).show()
 
             } catch (e: Exception) {
+
+                Log.e(
+                    "LibLinkGoogleSSO",
+                    "Unexpected error",
+                    e
+                )
 
                 Toast.makeText(
                     this@MainActivity,
