@@ -66,19 +66,14 @@ class HomeActivity : AppCompatActivity() {
         txtDate.text = dateFormat.format(Date())
 
         //Home search
-        txtSearch.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH){
-                val search = txtSearch.text.toString().trim()
+        txtSearch.setOnEditorActionListener { _, _, _ ->
+            val search = txtSearch.text.toString().trim()
 
-                val intent = Intent(this, BrowseActivity::class.java)
-                intent.putExtra("searchQuery", search)
+            val intent = Intent(this, BrowseActivity::class.java)
+            intent.putExtra("searchQuery", search)
+            startActivity(intent)
 
-                startActivity(intent)
-
-                true
-            }else{
-                false
-            }
+            true
         }
 
         //add button

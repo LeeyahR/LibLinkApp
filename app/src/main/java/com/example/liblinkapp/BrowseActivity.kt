@@ -57,12 +57,11 @@ class BrowseActivity : AppCompatActivity() {
             intent.getStringExtra("category")
 
         if (!homeSearch.isNullOrEmpty()) {
-
             searchBooks.setText(homeSearch)
-
+            filterBooks(homeSearch)
         } else if (!selectedCategory.isNullOrEmpty()) {
-
             searchBooks.setText(selectedCategory)
+            filterBooks(selectedCategory)
         }
 
         searchBooks.setOnEditorActionListener { _, _, _ ->
