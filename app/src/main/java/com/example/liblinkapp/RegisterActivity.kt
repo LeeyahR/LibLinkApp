@@ -25,6 +25,8 @@ import com.example.liblinkapp.models.GoogleLoginRequest
 import kotlinx.coroutines.launch
 import com.example.liblinkapp.sync.SyncScheduler
 import com.example.liblinkapp.utils.SessionManager
+import android.util.Log
+import kotlinx.coroutines.CancellationException
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var registerName: EditText
@@ -38,6 +40,8 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var txtBackToLogin: TextView
 
     private lateinit var credentialManager: CredentialManager
+
+    private var isGoogleSignInRunning = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -207,6 +211,11 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun registerWithGoogle() {
 
+        if (isGoogleSignInRunning) {
+            Log.w("LibLinkGoogleSSO", "Sign-in already running.")
+            return
+        }
+
         val studentNumber =
             registerStudentNumber.text.toString().trim()
 
@@ -217,10 +226,14 @@ class RegisterActivity : AppCompatActivity() {
             return
         }
 
+        isGoogleSignInRunning = true
         btnGoogleRegister.isEnabled = false
 
         lifecycleScope.launch {
+
             try {
+                Log.d("LibLinkGoogleSSO", "Starting Google sign-in.")
+
                 val googleIdOption =
                     GetGoogleIdOption.Builder()
                         .setFilterByAuthorizedAccounts(false)
@@ -235,9 +248,19 @@ class RegisterActivity : AppCompatActivity() {
                         .addCredentialOption(googleIdOption)
                         .build()
 
+                Log.d(
+                    "LibLinkGoogleSSO",
+                    "Opening Credential Manager."
+                )
+
                 val result = credentialManager.getCredential(
                     context = this@RegisterActivity,
                     request = request
+                )
+
+                Log.d(
+                    "LibLinkGoogleSSO",
+                    "Credential Manager returned a result."
                 )
 
                 val credential = result.credential
@@ -253,12 +276,27 @@ class RegisterActivity : AppCompatActivity() {
                             credential.data
                         )
 
+                    Log.d(
+                        "LibLinkGoogleSSO",
+                        "Google ID token retrieved successfully."
+                    )
+
+                    Log.d(
+                        "LibLinkGoogleSSO",
+                        "Sending authentication request to LibLink API."
+                    )
+
                     authenticateGoogleWithBackend(
                         googleCredential.idToken,
                         studentNumber
                     )
 
                 } else {
+                    Log.e(
+                        "LibLinkGoogleSSO",
+                        "Unexpected credential type: ${credential::class.java.name}"
+                    )
+
                     Toast.makeText(
                         this@RegisterActivity,
                         "Invalid Google credential.",
@@ -266,7 +304,16 @@ class RegisterActivity : AppCompatActivity() {
                     ).show()
                 }
 
+            } catch (e: CancellationException) {
+                throw e
+
             } catch (e: NoCredentialException) {
+
+                Log.e(
+                    "LibLinkGoogleSSO",
+                    "No Google credentials available.",
+                    e
+                )
 
                 Toast.makeText(
                     this@RegisterActivity,
@@ -276,13 +323,25 @@ class RegisterActivity : AppCompatActivity() {
 
             } catch (e: GetCredentialException) {
 
+                Log.e(
+                    "LibLinkGoogleSSO",
+                    "Credential error: ${e.type}",
+                    e
+                )
+
                 Toast.makeText(
                     this@RegisterActivity,
-                    "Google sign-in unavailable: ${e.message}",
+                    "Google sign-in failed: ${e.type}",
                     Toast.LENGTH_LONG
                 ).show()
 
             } catch (e: Exception) {
+
+                Log.e(
+                    "LibLinkGoogleSSO",
+                    "Unexpected Google sign-in error.",
+                    e
+                )
 
                 Toast.makeText(
                     this@RegisterActivity,
@@ -291,7 +350,14 @@ class RegisterActivity : AppCompatActivity() {
                 ).show()
 
             } finally {
+
+                isGoogleSignInRunning = false
                 btnGoogleRegister.isEnabled = true
+
+                Log.d(
+                    "LibLinkGoogleSSO",
+                    "Google sign-in process finished."
+                )
             }
         }
     }
