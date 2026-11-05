@@ -46,6 +46,10 @@ class ProfileActivity : AppCompatActivity() {
 
         val sessionManager = SessionManager(this)
 
+        // Load the logged-in user's saved profile details
+        editName.setText(sessionManager.getName() ?: "")
+        editEmail.setText(sessionManager.getEmail() ?: "")
+
         // Save profile
         btnSaveProfile.setOnClickListener {
 
