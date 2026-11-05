@@ -14,14 +14,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "1015709200343-bq9gr06fi340cbs0h9dtqpglqg4shkio.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.liblinkapp",
-            "certificate_hash": "b658ead6e042c0af6148b3fb8003578ba54d924b"
-          }
-        },
-        {
           "client_id": "1015709200343-am4o8446vmu7je6ehc1kl3hbitrndegl.apps.googleusercontent.com",
           "client_type": 3
         }
