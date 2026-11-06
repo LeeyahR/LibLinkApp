@@ -1,407 +1,189 @@
-**LibLink - University Library Management System**
-**Overview**
-Using a cutting-edge mobile application, LibLink is a native Android library management system created in Kotlin to assist university students in finding, borrowing, reserving, and managing library materials.
-
-The application provides a centralised platform that allows students to:
-- Look up and peruse the library's offerings.
-- Check out and hold onto books
-- View the history of borrowing
-- Send in reviews and ratings.
-- Get alerts about events at the library.
-- Access library resources both offline and online.
-- Use biometric authentication and Single Sign-On (SSO) to securely authenticate
-The project uses MVVM architecture, Room Database, Retrofit networking, Firebase services, and GitHub CI/CD automation, among other contemporary Android development techniques.
-
-**Project Objectives**
-The primary objectives of LibLink are:
-- Expand the availability of university library materials
-- Decrease reliance on in-person library visits
-- Give information on the availability of resources in real time.
-- Encourage offline access by using local caching
-- Boost user interaction with ratings and reviews
-- Provide a safe and convenient experience
-
-**Features**
-**Core Features**
-
-**Authentication**
-
-- Single Sign-On (SSO) on Google
-- Firebase Verification
-- Management of user sessions
-- Persistence of secure login
-
-**Library Catalogue**
-
-- View the complete book collection.
-- Find books by title.
-- Find books by author name.
-- Browse books by category.
-- Display only books that are currently available.
-
-**Borrowing System**
-
-- Borrow books from the library.
-- View currently borrowed books.
-- Access previous borrowing records.
-- Manage and track borrowed books.
-
-**Reservation System**
-
-- Reserve books that are currently unavailable.
-- View the reservation waiting list.
-- Check the status of book reservations.
-
-**User Profile**
-
-- View personal account details.
-- Update and manage account settings.
-- Securely log out of the system.
-
-**Custom Feature 1: Ratings and Reviews**
-Students can provide feedback by writing book reviews and assigning ratings based on their reading experience.
-
-**Functionality**
-
-- Rate books using a 1–5 star scale.
-- Submit written feedback and comments.
-- Browse reviews submitted by other users.
-- Modify previously submitted reviews.
-- Remove existing reviews.
-
-**Validation**
-
-The system prevents:
-- Prevent submission of blank reviews.
-- Validate ratings to ensure they fall within the accepted range.
-- Reject incorrectly formatted or incomplete submissions.
-
-**Logging**
-
-Review-related activities and user interactions are monitored and recorded through Android Logcat for debugging and tracking purposes.
-Example:
-Log.d("ReviewViewModel", "Review submitted")
-
-**Custom Feature 2: Offline Catalogue Browsing**
-The application enables offline functionality by using Room Database to locally store and manage data, allowing users to access information without an internet connection.
-
-**Online Mode**
-REST API
-    ↓
-Book Repository
-    ↓
-Room Database Cache
-    ↓
-User Interface
-
-**Offline Mode**
-Room Database
-    ↓
-Repository
-    ↓
-User Interface
-
-**Benefits**
-
-- Access the book catalogue without requiring an internet connection.
-- Improve application performance through faster data retrieval.
-- Minimise network usage by reducing unnecessary server requests.
-
-**POE Feature: Offline Synchronisation**
-LibLink enables users to access selected features and perform supported operations without an active internet connection.
-
-**Example Workflow**
-No Internet
-      ↓
-Submit Review
-      ↓
-Stored in Room Database
-      ↓
-Marked as Pending
-      ↓
-Internet Restored
-      ↓
-WorkManager Sync
-      ↓
-REST API
-      ↓
-Cloud Database
-
-**Technologies**
-
-- Room Database
-- WorkManager
-- Retrofit
-- Coroutines
-
-**Real-Time Notifications**
-Firebase Cloud Messaging (FCM) enables the application to send and receive push notifications, keeping users informed about important updates and activities.
-
-**Notification Examples**
-
-- Notify users when a reserved book becomes available.
-- Send reminders about approaching book return deadlines.
-- Inform users when their book reservations are approved.
-- Deliver important library news and announcements.
-
-**Biometric Authentication**
-The application supports:
-- Fingerprint Verification: Allow users to securely access their accounts using fingerprint authentication.
-- Facial Recognition: Enable face-based authentication on compatible devices.
-The Android Biometric API provides an additional layer of security by allowing users to authenticate their identity through supported biometric methods before accessing the application after logging in.
-
-**Flow**
-Google Login
-      ↓
-Biometric Verification
-      ↓
-Dashboard
-
-**Multi-Language Support**
-LibLink offers multilingual support, allowing users to access and navigate the application in various South African languages.
-
-Currently implemented:
-- English
-- isiZulu
-
-Language translations and text resources are organised and maintained using Android's resource files to support multiple languages within the application.
-
-Example:
-res/values/strings.xml
-res/values-zu/strings.xml
-
-**Architecture**
-The application is structured using the Model-View-ViewModel (MVVM) architectural pattern to promote code organisation, maintainability, and separation of concerns.
-UI Layer
-     ↓
-ViewModels
-     ↓
-Repositories
-     ↓
-─────────────────
-│               │
-REST API     Room DB
-│               │
-Remote Data  Local Data
-
-**Advantages**
-
-- Clear separation of application components and responsibilities.
-- Simplified testing and debugging processes.
-- Improved ability to expand and accommodate new features.
-- Easier code management, updates, and maintenance.
-
-**Project Structure**com.example.liblink
-│
-├── data
-│   ├── local
-│   │   ├── dao
-│   │   ├── entities
-│   │   └── LibLinkDatabase.kt
-│   │
-│   └── remote
-│       ├── RetrofitInstance.kt
-│       ├── BookApiService.kt
-│       └── ReviewApiService.kt
-│
-├── repository
-│   ├── BookRepository.kt
-│   └── ReviewRepository.kt
-│
-├── viewmodel
-│   ├── BookViewModel.kt
-│   └── ReviewViewModel.kt
-│
-├── workers
-│   └── SyncReviewWorker.kt
-│
-├── ui
-│   ├── screens
-│   ├── components
-│   └── navigation
-│
-└── utils
-
-**Technology Stack**
-**Mobile Development**
-- Kotlin
-- Android Studio
-- Jetpack Compose
-
-**Architecture**
-- MVVM
-- Repository Pattern
-
-**Local Storage**
-- Room Database
-- DataStore
-
-**Networking**
-- Retrofit
-- Gson
-
-**Concurrency**
-- Kotlin Coroutines
-- Flow
-
-**Authentication**
-- Firebase Authentication
-- Google Sign-In
-
-**Notifications**
-- Firebase Cloud Messaging
-
-**Offline Sync**
-- WorkManager
-
-**Version Control**
-- Git
-- GitHub
-
-**REST API Architecture**
-Android Application
-        ↓
-REST API
-        ↓
-Business Logic Layer
-        ↓
-Database
-
-**Main Endpoints**
-
-**Authentication**
-POST /api/auth/login
-POST /api/auth/register
-
-**Books**
-GET /api/books
-GET /api/books/{id}
-
-**Reviews**
-GET /api/books/{id}/reviews
-POST /api/reviews
-PUT /api/reviews/{id}
-DELETE /api/reviews/{id}
-
-**Reservations**
-POST /api/reservations
-GET /api/reservations
-
-**Database Schema**
-**User**
-userId : Int
-name : String
-email : String
-role : String
-
-**Book**
-bookId : Int
-title : String
-author : String
-isbn : String
-category : String
-availableCopies : Int
-
-**Review**
-reviewId : Int
-bookId : Int
-userId : String
-rating : Int
-comment : String
-synced : Boolean
-
-
-**Reservation**
-reservationId : Int
-bookId : Int
-userId : String
-status : String
-
-**Testing Strategy**
-The project includes:
-
-**Unit Tests**
-- Login validation
-- Book search functionality
-- Review validation
-- Repository operations
-
-**Integration Tests**
-- API communication
-- Room database operations
-- Offline synchronisation
-
-**UI Testing**
-- Navigation flows
-- Form validation
-- Authentication flow
-
-**GitHub Actions CI/CD**
-The repository uses GitHub Actions to automate:
-- Project builds
-- Unit testing
-- Build verification
-The automated workflow is triggered whenever new code changes are pushed to the repository.
-Example workflow:
-on:
-  push:
-    branches:
-      - main
-Automated validation processes verify that the application compiles and builds correctly in an environment independent of the developer's local machine.
-
-**Screenshots**
-Login Screen
-Dashboard
-Browse Books
-Book Details
-Review Screen
-Offline Mode
-Profile Screen
-Settings Screen
-
-**Version Control Workflow**
-The project follows a structured Git workflow.
-Example commit history:
-Initial project setup
-Implemented authentication
-Added catalogue feature
-Implemented review system
-Added offline caching
-Implemented synchronisation
-Added notifications
-Fixed validation issues
-Prepared final release
-
-**Final POE Release**
-The final project release is tagged:
-git tag -a FinalPOE -m "Final POE Submission"
-git push origin FinalPOE
-This tag identifies the final assessed submission.
-
-**Contributors**
-| **Contributor** | **Responsibilities** |
+
+# LibLink – University Library Application
+
+[![Android CI](https://github.com/LeeyahR/LibLinkApp/actions/workflows/android.yml/badge.svg?branch=master)](https://github.com/LeeyahR/LibLinkApp/actions/workflows/android.yml)
+
+[**View GitHub Actions – CI Workflow**](https://github.com/LeeyahR/LibLinkApp/actions)
+
+## 1. Project Overview
+
+LibLink is a group-developed Android application designed to provide users with convenient access to library-related functionality through a mobile platform.
+
+The application is developed using Kotlin and XML in Android Studio and communicates with an ASP.NET Core Web API. The backend is developed using C# and uses Entity Framework Core to interact with a SQL Server database.
+
+The project forms part of the PROG7314 Programming 3E Portfolio of Evidence.
+
+## 2. Project Objectives
+
+The main objectives of LibLink are to:
+
+- Develop an Android application with a user-friendly interface.
+- Provide access to library-related functionality through a mobile device.
+- Connect the Android application to a backend API.
+- Implement authentication and additional security features.
+- Explore offline functionality and additional application services.
+- Apply collaborative software development practices.
+- Use automated builds to support development and integration.
+
+## 3. Application Features
+
+### 3.1 Core Application
+
+- Android application developed using Kotlin and XML.
+- User login and registration functionality.
+- Home screen and application navigation.
+- Book browsing and search functionality.
+- Add Book functionality.
+- User profile screen.
+- Communication with the backend API.
+
+### 3.2 Authentication and Security
+
+- Biometric authentication using AndroidX Biometric.
+- Google Sign-In integration using Google authentication and Firebase Authentication.
+- HTTPS communication with the hosted backend API.
+
+### 3.3 Additional Group Features
+
+The following features form part of the team's allocated development responsibilities. Their implementation and integration status should be confirmed against the latest project version:
+
+- Offline data access and synchronisation using RoomDB.
+- Application settings.
+- Multilingual support.
+- Firebase Cloud Messaging notifications.
+
+## 4. Technologies Used
+
+| Technology | Purpose |
 |---|---|
-| Leeyah | Biometric Authentication, System Integration and DevOps |
-| Saihil | Google Single Sign-On (SSO) and Offline Synchronisation |
-| Kiaano | Settings Management, Multilingual Support and Notifications |
-| Vianka | Documentation, Testing Coordination and Project Submission |
+| Android Studio | Android development environment |
+| Kotlin | Android application programming language |
+| XML | Android user interface layouts |
+| C# | Backend programming language |
+| ASP.NET Core Web API | Backend services |
+| Entity Framework Core | Backend database access |
+| Microsoft SQL Server | Backend database |
+| Retrofit | Android-to-API communication |
+| Firebase Authentication | Authentication integration |
+| Firebase Cloud Messaging | Push notification functionality |
+| RoomDB | Local database functionality |
+| Git | Source code version control |
+| GitHub | Repository hosting and collaboration |
+| GitHub Actions | Automated build workflow |
 
-**References**
-Android Developers. (2026). Android Developer Documentation. https://developer.android.com
+## 5. System Architecture
 
-Firebase. (2026). Firebase Authentication Documentation. https://firebase.google.com/docs/auth
+LibLink follows a client-server approach.
 
-Firebase. (2026). Firebase Cloud Messaging Documentation. https://firebase.google.com/docs/cloud-messaging
+The Android application communicates with the backend API using Retrofit. The backend processes requests and uses Entity Framework Core to access the SQL Server database.
 
-Google. (2026). Android Biometric Authentication Documentation. https://developer.android.com/training/sign-in/biometric-auth
+General communication flow:
 
-JetBrains. (2026). Kotlin Documentation. https://kotlinlang.org/docs
+```text
+Android Application
+        |
+        | Retrofit / HTTPS
+        |
+        v
+ASP.NET Core Web API
+        |
+        | Entity Framework Core
+        |
+        v
+Microsoft SQL Server
+```
 
-Square. (2026). Retrofit Documentation. https://square.github.io/retrofit
+Firebase services are also used for authentication integration and are intended to support notification functionality.
 
-Android Developers. (2026). Room Persistence Library Documentation. https://developer.android.com/training/data-storage/room
+## 6. Git and GitHub Workflow
 
-Android Developers. (2026). WorkManager Documentation. https://developer.android.com/topic/libraries/architecture/workmanager
+Git and GitHub are used to manage the source code and coordinate development between group members.
 
-**LibLink v1.0 - University Library Management System**
-**Built with Kotlin, Jetpack Compose, Room, Retrofit, Firebase, and MVVM Architecture.**
+The project uses a feature-branch workflow to allow team members to work on separate features without directly changing the main project branch.
+
+### 6.1 Branch Structure
+
+- `master` – Main project branch containing integrated code.
+- `feature/biometric-auth` – Feature branch used for developing biometric authentication.
+- `feature/*` – Additional feature branches used by team members for separate development tasks.
+
+### 6.2 Development Workflow
+
+1. Team members obtain the latest changes from `master`.
+2. A feature branch is created for the assigned task.
+3. Development takes place on the feature branch.
+4. Changes are committed and pushed to GitHub.
+5. A Pull Request is created to merge the feature branch into `master`.
+6. Changes are reviewed and integrated into the main project.
+
+### 6.3 Example Git Commands
+
+The following commands demonstrate the workflow used for the biometric authentication feature:
+
+```bash
+git checkout master
+git pull origin master
+git checkout feature/biometric-auth
+
+git add .
+git commit -m "Update biometric authentication"
+git push origin feature/biometric-auth
+```
+
+## 7. Continuous Integration – GitHub Actions
+
+GitHub Actions is used to automate the Android application build process.
+
+The workflow performs the following tasks:
+
+1. Checks out the repository source code.
+2. Sets up the required Java environment.
+3. Configures the Android build environment.
+4. Builds the Android application.
+5. Uploads the generated APK as a workflow artifact.
+
+The workflow provides an automated way to check whether the application builds successfully and allows the generated APK to be accessed from GitHub Actions.
+
+A successful workflow run and APK artifact can be viewed through the repository's Actions section.
+
+**Useful links:**
+
+- [GitHub Actions – All Workflow Runs](https://github.com/LeeyahR/LibLinkApp/actions)
+- [Android CI Workflow](https://github.com/LeeyahR/LibLinkApp/actions/workflows/android.yml)
+
+## 8. Project Repository
+
+GitHub repository:
+
+[https://github.com/LeeyahR/LibLinkApp](https://github.com/LeeyahR/LibLinkApp)
+
+The repository contains the Android application source code, project files and development workflow.
+
+## 9. Demonstration
+
+A video demonstration of the LibLink application is included in the project's README and repository documentation.
+
+**YouTube demonstration:** Retain the existing YouTube video URL here.
+
+## 10. Team Contributions
+
+| Contributor | Responsibilities |
+|---|---|
+| Leeyah Rambaran | Biometric authentication, system integration, Git and DevOps, CI/CD |
+| Saihil Narine | Google Single Sign-On (SSO) and offline synchronisation |
+| Kiaano Ramsamy | Settings management, multilingual support and Firebase Cloud Messaging |
+| Vianka Mahabeer | Documentation, testing coordination, demonstration and project submission |
+
+## 11. Project Status
+
+LibLink was developed as a collaborative academic software development project.
+
+The repository reflects the team's implementation and integration work. Individual features may have different completion and testing statuses depending on their development progress.
+
+The final project should be evaluated using the functionality available in the submitted application and the evidence provided in the Portfolio of Evidence.
+
+---
+
+**LibLink – PROG7314 Programming 3E**
+
+Developed using Kotlin, XML, ASP.NET Core Web API, C#, Entity Framework Core and Microsoft SQL Server.
