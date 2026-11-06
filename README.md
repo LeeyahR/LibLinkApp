@@ -163,7 +163,8 @@ The repository contains the Android application source code, project files and d
 
 A video demonstration of the LibLink application is included in the project's README and repository documentation.
 
-**YouTube demonstration:** Retain the existing YouTube video URL here.
+**YouTube demonstration:** 
+https://youtube.com/shorts/SttcdK1ef90?si=M5_rFqGUFK-uB9EL
 
 ## 10. Team Contributions
 
